@@ -28,27 +28,3 @@ AutomatoCompleto[0].Ligacoes[0].Visitado = True;
 arquivo = open('liguagem.txt', 'r');
 texto = arquivo.read();
 print(texto);
-
-
-
-
-
-#variavel = Automato('S');
-#variavel.Teste('foi');
-
-
-##dicionario = dict({'var1', 'valor1'});
-##print(dicionario);
-
-#one = Automato('one');
-#two = Automato('two');
-
-#my_dict = {'a' : one, 'b' : two};
-
-#print(my_dict);
-
-#print(type(my_dict));
-
-#my_dict['a'].Teste('um');
-#my_dict['b'].Teste('dois');
-
