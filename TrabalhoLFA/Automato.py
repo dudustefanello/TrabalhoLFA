@@ -1,12 +1,20 @@
-from Ligacoes import Ligacoes;
+from Producoes import Producoes;
 
 class Automato(object):
-    Identificador = '';
-    Ligacoes = [];
+    Identificador = 0;
+    Producoes = [];
+
+    Ativo = True;
+    Visitado = False;
+    Morto = False;
+    Inalcancavel = False;
+    Final = False;
 
     def __init__(self, ident):
         self.Identificador = ident;
+        self.Producoes = [];
+        print('Adicionado estado', ident);        
 
-    def AddLigacao(self, Origem, Destino):
-        self.Ligacoes.append(Ligacoes(Origem, Destino));
-        print('Adicionado ligações',Origem,Destino);        
+    def AddLigacao(self, Token, Destino):
+        self.Producoes.append(Producoes(Token, Destino));
+        print('Adicionado produção', str(Token) +'<' + str(Destino) + '>');        
