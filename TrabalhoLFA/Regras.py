@@ -1,8 +1,9 @@
 from Producoes import Producoes;
 
-class Automato(object):
+class Regras(object):
     Identificador = 0;
     Producoes = [];
+    Origen = [];
 
     Ativo = True;
     Visitado = False;

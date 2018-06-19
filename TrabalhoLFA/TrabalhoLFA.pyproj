@@ -22,7 +22,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Automato.py">
+    <Compile Include="Automatos.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Regras.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Producoes.py">

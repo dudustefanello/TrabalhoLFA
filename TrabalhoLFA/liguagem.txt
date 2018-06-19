@@ -1,6 +1,2 @@
 se
-entao
 senao
-para
-faca
-enquanto
