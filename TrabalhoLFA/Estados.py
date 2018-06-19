@@ -1,12 +1,11 @@
 from Producoes import Producoes;
 
-class Regras(object):
+class Estados(object):
     Identificador = 0;
     Producoes = [];
-    Origen = [];
+    Origem = [];
 
     Ativo = True;
-    Visitado = False;
     Morto = False;
     Inalcancavel = False;
     Final = False;
