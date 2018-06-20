@@ -25,15 +25,6 @@
     <Compile Include="Automatos.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Deterministico.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Regras.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Producoes.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="TrabalhoLFA.py" />
   </ItemGroup>
   <ItemGroup>

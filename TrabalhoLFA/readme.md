@@ -15,14 +15,7 @@ Implementar um algoritmo computacional que gere um Automato Finito Determinístic
 
 A Classe dos Automatos é a classe que faz a carga do automato do arquivo de texto para a estrutura inicial.
 
-## Estados
+A estrutura inicial consiste de:
 
-A Classe dos Estados é a classe que contém a estrutura de uma estado, com suas flags e seu vetor de produções.
-
-## Producoes
-
-A Classe das Produções é a classe que contém a estrutura de uma produção, com suas flags, token e estado destino.
-
-## Deterministico
-
-A Classe Determinístico contém as regras que farão a determinização do automato após a eliminação de epsilon transição.
+* Vetor de Estados
+* Conjunto Alfabeto

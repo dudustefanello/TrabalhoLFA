@@ -1,58 +1,40 @@
-from Producoes import Producoes;
-from Estados import Estados;
-
 class Automato(object):
 
-    Estados = [];
-    
+    Estados = dict();
+
+    # -- Leitura de arquivos:
     def __init__(self, arquivo):
-        # -- Leitura de arquivos:
-        
-        self.Automato = [];             # Inicializa o vetor da classe
+
+        self.Estados = {};  # Inicializa o dictionary da classe
+
         arquivo = open(arquivo, 'r');   # Abre o arquivo de entrada
         texto = arquivo.read();         # Lê o arquivo de entrada
         self.carrega(texto);            # Carrega o automato a partir do arquivo de texto
 
-
+    # -- Inserção no automato:
     def carrega(self, texto):
-        # -- Inserção no automato:
 
         New = True;
 
-        self.Estados.append(Estados(0));  # Insere o estado final
+        self.Estados.update({len(self.Estados):{}});
 
         for a in texto:
-            a = a.lower();   # Colocar letra em minusculo
+            a = a.lower();  # Utiliza letra em minusculo
            
-            if a == '\n':                       # Identificar quebras de linha
-                New = True;                     # Flag de nova palavra
-                self.Estados[-1].Final = True;  # Marca o Estado como Final
+            if a == '\n':   # Identifica quebra de linha
+                New = True; # Flag de nova palavra
             else:
                 if New:
-                    self.Estados[0].AddLigacao(a, len(self.Estados)); # Carrega no estado inicial
-                    self.Estados.append(Estados(len(self.Estados)));  # Cria o estado para continuação
+                    if a in self.Estados[0]:                                # Se o Token já existe no estado
+                        self.Estados[0][a].append(len(self.Estados));       # Então adiciona referenciando o token
+                    else:
+                        self.Estados[0].update({a: [len(self.Estados)]});   # Senão carrega no estado inicial, criando novo token
 
+                    self.Estados.update({len(self.Estados):{}});            # Cria o próximo estado para continuação
                     New = False;
                 else:
-                    self.Estados[-1].AddLigacao(a, len(self.Estados)); # Insere no último estado criado
-                    self.Estados.append(Estados(len(self.Estados)));   # Cria o estado para continuação 
-    
-                    
-    def imprimeTela(self):
-        # -- Impressão do Automato
-
-        for i in self.Estados: # Loop no automato
-            if i.Final:
-                print('*', end=''); # Marca asterisco para estados que são finais
-            else:
-                print(' ', end=''); # Coloca espaço para compesar asterisco
-            
-            print('<' + str(i.Identificador) + '> ::= | ', end=''); # Insere o identificador da regra
-            
-            for j in i.Producoes:                                       # Loop nas produções do estado selecionado
-                print(j.Token + '<' + str(j.Destino) + '> | ', end=''); # Insere as produções
-            
-            print('');  # Insere quebra de linha ao final de cada estado            
+                    self.Estados[len(self.Estados) - 1].update({a: [len(self.Estados)]});   # Insere no último estado criado
+                    self.Estados.update({len(self.Estados):{}});                            # Cria o próximo estado para continuação
 
 
                 
