@@ -25,6 +25,9 @@
     <Compile Include="Automatos.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Deterministico.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Regras.py">
       <SubType>Code</SubType>
     </Compile>
@@ -32,6 +35,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TrabalhoLFA.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="liguagem.txt" />
+    <Content Include="readme.md" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

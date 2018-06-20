@@ -1,6 +1,8 @@
 class Producoes(object):
-    Token = "";
+    Token = '';
     Destino = 0;
+
+    Visitado = False;
 
     def __init__(self, token, destino):
         self.Token = token;
