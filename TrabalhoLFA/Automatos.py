@@ -47,7 +47,7 @@ class Automato(object):
             else:
                 print(' ', end=''); # Coloca espaço para compesar asterisco
             
-                print('<' + str(i.Identificador) + '> ::= | ', end=''); # Insere o identificador da regra
+            print('<' + str(i.Identificador) + '> ::= | ', end=''); # Insere o identificador da regra
             
             for j in i.Producoes:                                       # Loop nas produções do estado selecionado
                 print(j.Token + '<' + str(j.Destino) + '> | ', end=''); # Insere as produções
