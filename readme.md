@@ -9,13 +9,12 @@ Implementar um algoritmo computacional que gere um Automato Finito Determinístic
 * *Linguagem utilizada:* Python;
 * *Notação Utilizada:* BFN;
 
-# Clases
-
-## Automatos
+# Estrutura do Automato Indeterminístico
 
 A Classe dos Automatos é a classe que faz a carga do automato do arquivo de texto para a estrutura inicial.
 
-A estrutura inicial consiste de:
+A estrutura consiste de:
 
-* Vetor de Estados
-* Conjunto Alfabeto
+* Dictionary de Estados:
+	* Cada Estado é um Dictionary de Produções:
+		* Cada Token é um índice para uma lista de estados-destino.
