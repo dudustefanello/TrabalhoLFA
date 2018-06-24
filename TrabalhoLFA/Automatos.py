@@ -14,6 +14,10 @@ class Automato(object):
 
         self.setAlfabeto();             # Relacioanar os estados com o Alfabeto
 
+        self.buscarIndeterminismo();
+
+        self.setAlfabeto();             # Relacioanar os estados com o Alfabeto
+
         self.imprimir();                # Imprimir 
 
 
@@ -74,3 +78,31 @@ class Automato(object):
 
 
 
+    def determinizar(self, producao):
+        lista = [];
+        temp = dict();
+        novo = len(self.Estados);
+        for i in producao:
+            for j in sorted(self.Alfabeto):
+                if len(self.Estados[i][j]) > 0:
+                    if j in temp:
+                        temp[j] = list(set(temp[j] + self.Estados[i][j]))
+                    else:
+                        temp.update({j:list(set(self.Estados[i][j]))});
+
+        self.Estados.update({novo:temp})
+
+        return [novo];
+
+
+    def buscarIndeterminismo(self):
+        quantidadeEstados = len(self.Estados);
+        i = 0;
+
+        while i < quantidadeEstados:
+            for j in sorted(self.Alfabeto):
+                if len(self.Estados[i][j]) > 1:
+                    self.Estados[i][j] = self.determinizar(self.Estados[i][j]);
+                    self.setAlfabeto();             # Relacioanar os estados com o Alfabeto
+                    quantidadeEstados = len(self.Estados);
+            i += 1;
