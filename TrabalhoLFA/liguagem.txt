@@ -1,6 +1,17 @@
 se
 entao
 senao
+para
+enquanto
+funcao
+fim
 
 <S> ::= a<A> | e<A> | i<A> | o<A> | u<A>
 <A> ::= a<A> | e<A> | i<A> | o<A> | u<A> | $
+
+<S> ::= 1<A> | 2<A> | 3<A> | 4<A> | 5<A> | 6<A> | 7<A> | 0<A>
+<A> ::= 1<A> | 2<A> | 3<A> | 4<A> | 5<A> | 6<A> | 7<A> | 0<A> | $
+
+<S> ::= '<A>
+<A> ::= a<A> | e<A> | i<A> | o<A> | u<A> | '<B>
+<B> ::= $

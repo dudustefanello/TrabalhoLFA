@@ -3,7 +3,7 @@ import re
 FINAL = '$'
 
 class Automato(object):
-    
+
     # -- Declaração dos campos da classe
     Estados = dict();   # Estrutura que guarda todos os estados do autômato
     Alfabeto = set();   # Estrutura que contém todos os símbolos do alfabeto
@@ -25,7 +25,7 @@ class Automato(object):
     def carregaToken(self, simbolo, new):
         self.Alfabeto.add(simbolo);                                                     # Adiciona o símbolo ao conjunto alfabeto
 
-        if new:                                                                         # Se o símbolo for de um novo token:                                                                        
+        if new:                                                                         # Se o símbolo for de um novo token:
             if simbolo in self.Estados[0]:                                              # Se o token já existir no estado:
                 self.Estados[0][simbolo].append(len(self.Estados));                     # Adiciona na lista de estados destinos daquele token
 
@@ -38,69 +38,79 @@ class Automato(object):
             self.Estados.update({len(self.Estados): {}});                               # Cria um estado vazio para a próxima iteração
 
 
-
-    # -- Inserção das regras da Gramática Regular
+    # -- Leitura das regras da Gramática Regular
     def carregaGramatica(self, textos):
-        regras = dict();
-        estados = dict();
+        regras = dict();                                                        # Inicia a estrutura temporária para mapeamento das regras
+        estados = dict();                                                       # Inicia a estrutura temporária para guardar os estados
 
-        ignorar = [' ', ':', '=', '|'];
+        ignorar = [' ', ':', '=', '|'];                                         # Lista de caracteres que devem ser ignorados na leitura
 
-
+        # - Insere uma nova regra no mapa de regras
         def novaRegra(self, texto):
-            if texto == 'S':
-                regras.update({'S': 0});
-                estados.update({0: {}})
-            else:
-                numero = len(self.Estados) + len(regras) - 1;
-                regras.update({texto: numero});
-                estados.update({regras[texto]: {}})
+            if texto == 'S':                                                        # Se o identificador do estado for S:
+                estados.update({0: {}});                                            # Será adicionado no estado inicial
+                regras.update({'S': 0});                                            # E mapeado para o estado inicial
+
+            else:                                                                   # Senão:
+                numero = len(self.Estados) + len(regras) - 1;                       # Será inserida uma regra no
+                regras.update({texto: numero});                                     # último espaço do autômato
+                estados.update({regras[texto]: {}});                                # E mapeado para o número do último estado
 
 
+        # - Insere uma nova transição nas regras
         def novaTransicao(self, texto, regra):
-            self.Alfabeto.add(texto);
-            if regra not in regras:
-                novaRegra(self, regra);
-            estados[regraAtiva].update({texto: [regras[regra]]});
+            self.Alfabeto.add(texto);                                               # Adiciona o símbolo no alfabeto
+
+            if regra not in regras:                                                 # Se a regra ainda não foi mapeada:
+                novaRegra(self, regra);                                             # Cria a regra nova
+
+            if texto in estados[regraAtiva]:                                        # se o símbolo já existe no estado:
+                lista = list(set(estados[regraAtiva][texto] + [regras[regra]]));    # Adiciona o simbolo novo
+                estados[regraAtiva][texto] = lista;                                 # aos existentes.
+
+            else:                                                                   # Senao
+                estados[regraAtiva].update({texto: [regras[regra]]});               # Adiciona o símbolo no estado.
 
 
-        for linha in textos:
-            word = '';
-            for caractere in linha:
-                if caractere in ignorar:
-                    continue;
+        for linha in textos:                                                    # Faz um loop nas linhas do texto de entrada
 
-                word = word + caractere;
-    
-                if re.match('<\S>', word) is not None:
-                    if word[1] not in regras:
-                        novaRegra(self, word[1]);
-                    regraAtiva = regras[word[1]];
-                    word = '';
+            word = '';                                                          # Zera a palavra
 
-                elif re.match('\S<\S>', word) is not None:
-                    novaTransicao(self, word[0], word[2]);
-                    word = '';
+            for caractere in linha:                                             # Faz um loop nos caracteres da linha
+                if caractere in ignorar:                                        # Se o caractere estiver na lista de ignorados:
+                    continue;                                                   # Não faz nada
 
-                elif word == FINAL:
-                    self.Finais.add(regraAtiva);
+                word = word + caractere;                                        # Concatena a palavra com o caractere válido
 
-            self.insereEstadosGramatica(estados);
+                if re.match('<\S>', word) is not None:                          # Se a palavra tem o formato de um nome de regra:
+                    if word[1] not in regras:                                   # Se não existe regra com esse nome:
+                        novaRegra(self, word[1]);                               # Adiciona a nova regra com esse nome.
+                    regraAtiva = regras[word[1]];                               # Marca a flag de regra ativa para adicionar uma transição nessa regra
+                    word = '';                                                  # Reinicia a palavra
+
+                elif re.match('\S<\S>', word) is not None:                      # Se a palavra tem o formato de uma transição:
+                    novaTransicao(self, word[0], word[2]);                      # Adiciona uma nova transição à regra ativa
+                    word = '';                                                  # Reinicia a palavra
+
+                elif word == FINAL:                                             # Se foi encontrado um caractere que indica estado final:
+                    self.Finais.add(regraAtiva);                                # Marca a regra ativa como final.
+
+            self.insereEstadosGramatica(estados);                               # Insere os estados criados localmente nos estados do automato
 
 
+    # -- Inserção das regras da gramática regular no automato
     def insereEstadosGramatica(self, estados):
-        for nome, estado in estados.items():
-            for simbolo, transicoes in estado.items():
-                if nome not in self.Estados:
-                    self.Estados.update({nome: {}});    
+        for nome, estado in estados.items():                                        # Faz um loop no estado temporário
+            for simbolo, transicoes in estado.items():                              # Faz um loop no transições do estado temporário
+                if nome not in self.Estados:                                        # Se o nome/número do estado não existe no automato:
+                    self.Estados.update({nome: {}});                                # Adiciona o estado ao automato
 
-                if simbolo in self.Estados[nome]:
-                    lista = list(set(self.Estados[nome][simbolo] + transicoes));
-                    self.Estados[nome][simbolo] = lista;
-                else:
-                    self.Estados[nome].update({simbolo: transicoes});
-            
+                if simbolo in self.Estados[nome]:                                   # Se o símbolo já existe no estado:
+                    lista = list(set(self.Estados[nome][simbolo] + transicoes));    # Adiciona as transições do estado temporário
+                    self.Estados[nome][simbolo] = lista;                            # Junto às transições do estado do automato
 
+                else:                                                               # Senão:
+                    self.Estados[nome].update({simbolo: transicoes});               # Adiciona as novas transições no estado.
 
 
     # -- Imprime o automato finito deterministico
@@ -124,17 +134,17 @@ class Automato(object):
 
 
     # -- Relacioana os estados com os símbolos do alfabeto
-    def setAlfabeto(self):   
+    def setAlfabeto(self):
         for nome, estado in self.Estados.items():   # Faz um loop nos estados
             self.setAlfabetoEstado(estado);         # Relacioana o estado com os símbolos do alfabeto
-        
+
 
     # -- Insere no automato:
     def carrega(self):
         new = True;                                     # Marca flag de novo estado
 
         self.Estados.update({len(self.Estados): {}});   # Inicializa o estado inicial com: um inteiro para chave e um dicionário vazio para conteúdo
-        
+
         for simbolo in self.Texto:                      # Faz um loop, caractere e caractere na string da estrada
             simbolo = simbolo.lower();                  # Utiliza todas as letras em minusculo
 
@@ -167,7 +177,7 @@ class Automato(object):
 
         self.setAlfabetoEstado(estadoTemporario);                                               # Relaciona o estado temporário com os símbolos do alfabeto
         self.Estados.update({novoEstado: estadoTemporario});                                    # Adiciona o estado temporário ao dicionário de estados da classe
-        
+
         return [novoEstado];                                                                    # Renorna o nome/número do estado adicionado
 
 
