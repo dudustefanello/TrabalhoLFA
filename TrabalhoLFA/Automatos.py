@@ -165,20 +165,22 @@ class Automato(object):
 
     # -- Determiniza um estado do automato
     def determinizar(self, producoes):
-        estadoTemporario = dict();                                                              # Cria um estado temporário
-        novoEstado = len(self.Estados);                                                         # Dá nome/número ao estado que será criado
+        estadoTemporario = dict();                                                  # Cria um estado temporário
+        novoEstado = len(self.Estados);                                             # Dá nome/número ao estado que será criado
 
-        for i in producoes:                                                                     # Faz um loop nas produções que que contém a indeterminação
-            for j in sorted(self.Alfabeto):                                                     # Faz um loop no conjunto de símbolos do alfabeto
-                if j in estadoTemporario:                                                       # Se o o símbolo j já estiver no estado temporário:
-                    estadoTemporario[j] = list(set(estadoTemporario[j] + self.Estados[i][j]))   # Adiciona a lista de transições de j ao estado
-                else:                                                                           # Senão:
-                    estadoTemporario.update({j: list(set(self.Estados[i][j]))});                # Atualiza o estado temporário com o símbolo j e com a lista já existente no estado
+        for i in producoes:                                                         # Faz um loop nas produções que que contém a indeterminação
+            for j in sorted(self.Alfabeto):                                         # Faz um loop no conjunto de símbolos do alfabeto
+                if j in estadoTemporario:                                           # Se o o símbolo j já estiver no estado temporário:
+                    lista = list(set(estadoTemporario[j] + self.Estados[i][j]));    # Adiciona a lista de transições de j
+                    estadoTemporario[j] = lista;                                    # ao estado
 
-        self.setAlfabetoEstado(estadoTemporario);                                               # Relaciona o estado temporário com os símbolos do alfabeto
-        self.Estados.update({novoEstado: estadoTemporario});                                    # Adiciona o estado temporário ao dicionário de estados da classe
+                else:                                                               # Senão:
+                    estadoTemporario.update({j: list(set(self.Estados[i][j]))});    # Atualiza o estado temporário com o símbolo j e com a lista já existente no estado
 
-        return [novoEstado];                                                                    # Renorna o nome/número do estado adicionado
+        self.setAlfabetoEstado(estadoTemporario);                                   # Relaciona o estado temporário com os símbolos do alfabeto
+        self.Estados.update({novoEstado: estadoTemporario});                        # Adiciona o estado temporário ao dicionário de estados da classe
+
+        return [novoEstado];                                                        # Renorna o nome/número do estado adicionado
 
 
     # -- Percorre o autômato identificando e tratando seus indeterminismos
