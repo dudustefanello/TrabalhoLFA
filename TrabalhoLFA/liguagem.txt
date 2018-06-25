@@ -1,27 +1,6 @@
-select
-join
-inner
-outer
-left
-right
-update
-set
-where
-in
-delete
-from
-create
-insert
-into
-values
-alter
-drop
-table
-case
-when
-if
-then
-end
-else
+se
+entao
+senao
 
-<x>
+<S> ::= a<A> | e<A> | i<A> | o<A> | u<A>
+<A> ::= a<A> | e<A> | i<A> | o<A> | u<A> | $
