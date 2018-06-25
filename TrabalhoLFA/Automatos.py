@@ -1,10 +1,13 @@
 import re
 
+FINAL = '$'
+
 class Automato(object):
     
     # -- Declaração dos campos da classe
     Estados = dict();   # Estrutura que guarda todos os estados do autômato
     Alfabeto = set();   # Estrutura que contém todos os símbolos do alfabeto
+    Finais = set();     # Estrutura que contém os estados que são finais
     Texto = str();      # Campo para guardar a string de entrada
 
 
@@ -12,6 +15,7 @@ class Automato(object):
     def __init__(self, arquivo):
         self.Estados = dict();          # Inicializa o dictionary de estados com uma estrutura vazia
         self.Alfabeto = set();          # Inicializa o set do alfabeto com uma estrutura vazia
+        self.Finais = set();            # Inicializa o set de estados finais com uma estrutura vazia
 
         arquivo = open(arquivo, 'r');   # Abre o arquivo de entrada
         self.Texto = arquivo.read();    # Converte o arquivo para string
@@ -78,6 +82,9 @@ class Automato(object):
                     novaTransicao(self, word[0], word[2]);
                     word = '';
 
+                elif word == FINAL:
+                    self.Finais.add(regraAtiva);
+
             self.insereEstadosGramatica(estados);
 
 
@@ -99,6 +106,7 @@ class Automato(object):
     # -- Imprime o automato finito deterministico
     def imprimir(self):
         for nome, estado in self.Estados.items():                   # Faz um loop nos estados
+            print(' *' if nome in self.Finais else '  ', end='');   # Marca os estados que são finais
             print(nome, end=' = ');                                 # Imprime o nome/numero do estado
 
             for simbolo, transicoes in estado.items():              # Faz um loop em cada estado
@@ -134,6 +142,7 @@ class Automato(object):
                 if new:                                 # Se houve duas quebras de linha seguidas:
                     break;                              # Termina a leitura de tokens
                 new = True;                             # Marca flag para informar que o próximo símbolo é o início de um novo token
+                self.Finais.add(len(self.Estados) - 1); # Adiciona a informação de estado final em um estado
 
             else:                                       # Se não for quebra de linha:
                 self.carregaToken(simbolo, new);        # Carrega o token para o autômato.
