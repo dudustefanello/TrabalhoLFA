@@ -74,7 +74,8 @@ class Automato(object):
 
 
         for linha in textos:                                                    # Faz um loop nas linhas do texto de entrada
-
+            
+            linha = linha.replace('|', '/')
             word = '';                                                          # Zera a palavra
 
             for caractere in linha:                                             # Faz um loop nos caracteres da linha
