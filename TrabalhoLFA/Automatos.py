@@ -45,7 +45,6 @@ class Automato(object):
         estados = dict();                                                       # Inicia a estrutura temporária para guardar os estados
 
         ignorar = [' ', ':'];                                         # Lista de caracteres que devem ser ignorados na leitura
-        identificarEpson = ['|', '='];  
 
         # - Insere uma nova regra no mapa de regras
         def novaRegra(self, texto):
