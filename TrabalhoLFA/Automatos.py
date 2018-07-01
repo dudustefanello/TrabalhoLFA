@@ -44,7 +44,7 @@ class Automato(object):
         regras = dict();                                                        # Inicia a estrutura temporária para mapeamento das regras
         estados = dict();                                                       # Inicia a estrutura temporária para guardar os estados
 
-        ignorar = [' ', ':'];                                         # Lista de caracteres que devem ser ignorados na leitura
+        ignorar = [' ', ':'];                                                   # Lista de caracteres que devem ser ignorados na leitura
 
         # - Insere uma nova regra no mapa de regras
         def novaRegra(self, texto):
