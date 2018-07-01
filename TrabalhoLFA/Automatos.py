@@ -90,17 +90,15 @@ class Automato(object):
                     regraAtiva = regras[word[1]];                               # Marca a flag de regra ativa para adicionar uma transição nessa regra
                     word = '';                                                  # Reinicia a palavra
 
-                elif re.match('\S<\S>', word) is not None:                      # Se a palavra tem o formato de uma transição:
-                    novaTransicao(self, word[0], word[2]);                      # Adiciona uma nova transição à regra ativa
+                elif (re.match('/\S<\S>', word) is not None or
+                      re.match('=\S<\S>', word) is not None):                   # Se a palavra tem o formato de uma transição:
+                    novaTransicao(self, word[1], word[3]);                      # Adiciona uma nova transição à regra ativa
                     word = '';                                                  # Reinicia a palavra
 
-                elif re.match('|<\S>', word) is not None:
-                    novaTransicao(self, EPSON_TRANSICAO, word[2]);
-                    word = '';
-
-                elif re.match('=<\S>', word) is not None:
-                    novaTransicao(self, EPSON_TRANSICAO, word[2]);
-                    word = '';
+                elif (re.match('/<\S>', word) is not None or                    
+                      re.match('=<\S>', word) is not None):                     # Se a palavra tem o formato de um nome de regra:
+                    novaTransicao(self, EPSILON, word[2]);                        # Adiciona uma nova transição à regra ativa
+                    word = '';                                                  # Reinicia a palavra
 
                 elif word == FINAL:                                             # Se foi encontrado um caractere que indica estado final:
                     self.Finais.add(regraAtiva);                                # Marca a regra ativa como final.
