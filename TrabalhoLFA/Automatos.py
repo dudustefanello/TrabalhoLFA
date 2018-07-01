@@ -1,6 +1,7 @@
 import re
 
 FINAL = '$'
+EPSON_TRANSICAO = '#'
 
 class Automato(object):
 
@@ -43,7 +44,8 @@ class Automato(object):
         regras = dict();                                                        # Inicia a estrutura temporária para mapeamento das regras
         estados = dict();                                                       # Inicia a estrutura temporária para guardar os estados
 
-        ignorar = [' ', ':', '=', '|'];                                         # Lista de caracteres que devem ser ignorados na leitura
+        ignorar = [' ', ':'];                                         # Lista de caracteres que devem ser ignorados na leitura
+        identificarEpson = ['|', '='];  
 
         # - Insere uma nova regra no mapa de regras
         def novaRegra(self, texto):
@@ -79,6 +81,7 @@ class Automato(object):
             for caractere in linha:                                             # Faz um loop nos caracteres da linha
                 if caractere in ignorar:                                        # Se o caractere estiver na lista de ignorados:
                     continue;                                                   # Não faz nada
+                #elif caractere in 
 
                 word = word + caractere;                                        # Concatena a palavra com o caractere válido
 
@@ -91,6 +94,14 @@ class Automato(object):
                 elif re.match('\S<\S>', word) is not None:                      # Se a palavra tem o formato de uma transição:
                     novaTransicao(self, word[0], word[2]);                      # Adiciona uma nova transição à regra ativa
                     word = '';                                                  # Reinicia a palavra
+
+                elif re.match('|<\S>', word) is not None:
+                    novaTransicao(self, EPSON_TRANSICAO, word[2]);
+                    word = '';
+
+                elif re.match('=<\S>', word) is not None:
+                    novaTransicao(self, EPSON_TRANSICAO, word[2]);
+                    word = '';
 
                 elif word == FINAL:                                             # Se foi encontrado um caractere que indica estado final:
                     self.Finais.add(regraAtiva);                                # Marca a regra ativa como final.
