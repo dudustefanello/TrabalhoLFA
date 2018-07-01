@@ -1,7 +1,7 @@
 import re
 
 FINAL = '$'
-EPSON_TRANSICAO = '#'
+EPSILON = '#'
 
 class Automato(object):
 
