@@ -81,7 +81,6 @@ class Automato(object):
             for caractere in linha:                                             # Faz um loop nos caracteres da linha
                 if caractere in ignorar:                                        # Se o caractere estiver na lista de ignorados:
                     continue;                                                   # Não faz nada
-                #elif caractere in 
 
                 word = word + caractere;                                        # Concatena a palavra com o caractere válido
 
