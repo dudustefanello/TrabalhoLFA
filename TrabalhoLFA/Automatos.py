@@ -197,7 +197,7 @@ class Automato(object):
         i = 0;                                                                  # Zera a variável de índice
         while i < qtdEstados:                                                   # Faz um loop pelos estados
             for j in sorted(self.Alfabeto):                                     # Itera um laço pelo conjunto de símbolos do alfabeto
-                if len(self.Estados[i][j]) > 1:                                 # Se houver uma transição estiver indeterminada:
+                if i in self.Estados and len(self.Estados[i][j]) > 1:           # Se houver uma transição estiver indeterminada:
                     self.Estados[i][j] = self.determinizar(self.Estados[i][j]); # Determiniza o estado
 
                     qtdEstados = len(self.Estados);                             # Atualiza a quantidade de estados
