@@ -172,29 +172,42 @@ class Automato(object):
 
 
     # -- Determiniza um estado do automato
-    def determinizar(self, transicao, producao):
+    def determinizar(self, transicao, producao):        
         estadoTemporario = dict();                                                  # Cria um estado temporário
         novoEstado = len(self.Estados);                                             # Dá nome/número ao estado que será criado
         producoes = self.Estados[transicao][producao];
-        novasProducoesSubstituir = dict();        
-
-        for i in producoes:                                                         # Faz um loop nas produções que que contém a indeterminação
-            for j in sorted(self.Alfabeto):                                         # Faz um loop no conjunto de símbolos do alfabeto
-                if j in estadoTemporario:                                           # Se o o símbolo j já estiver no estado temporário:
-                    lista = list(set(estadoTemporario[j] + self.Estados[i][j]));    # Adiciona a lista de transições de j
-                    estadoTemporario[j] = lista;                                    # ao estado
+        producaoAgrupada = self.geraProducaoAgrupada(producoes);
+        novasProducoesSubstituir = dict();
+        
+        if producaoAgrupada not in novasProducoesSubstituir:
+            for i in producoes:                                                         # Faz um loop nas produções que que contém a indeterminação
+                for j in sorted(self.Alfabeto):                                         # Faz um loop no conjunto de símbolos do alfabeto
+                    if j in estadoTemporario:                                           # Se o o símbolo j já estiver no estado temporário:
+                        lista = list(set(estadoTemporario[j] + self.Estados[i][j]));    # Adiciona a lista de transições de j
+                        estadoTemporario[j] = lista;                                    # ao estado
                     
-                    if len(lista) > 1:
-                        novasProducoesSubstituir.update({j: [novoEstado,lista]});
+                        if len(lista) > 1:
+                            novasProducoesSubstituir.update({self.geraProducaoAgrupada(lista): [novoEstado,lista]});
 
-                else:                                                               # Senão:
-                    estadoTemporario.update({j: list(set(self.Estados[i][j]))});    # Atualiza o estado temporário com o símbolo j e com a lista já existente no estado
+                    else:                                                               # Senão:
+                        estadoTemporario.update({j: list(set(self.Estados[i][j]))});    # Atualiza o estado temporário com o símbolo j e com a lista já existente no estado
+        
+            self.setAlfabetoEstado(estadoTemporario);                                   # Relaciona o estado temporário com os símbolos do alfabeto        
+            self.Estados.update({novoEstado: estadoTemporario});                        # Adiciona o estado temporário ao dicionário de estados da classe
+            self.substituiNovaProducao(novasProducoesSubstituir);                        
+        else:
+            print('nao tem');
 
-        self.setAlfabetoEstado(estadoTemporario);                                   # Relaciona o estado temporário com os símbolos do alfabeto        
-        self.Estados.update({novoEstado: estadoTemporario});                        # Adiciona o estado temporário ao dicionário de estados da classe
-        self.substituiNovaProducao(novasProducoesSubstituir);
+        return;                 
+    
 
-        return;                                                        
+    def geraProducaoAgrupada(self, lista):
+        estado = '';
+        for item in lista:
+            estado += str(item);
+        print('novoEstadoCompactado [$]', estado);
+
+        return estado;
 
 
     def substituiNovaProducao(self, novasProducoesSubstituir):
