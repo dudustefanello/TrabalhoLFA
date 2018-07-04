@@ -186,8 +186,8 @@ class Automato(object):
         if ((producaoAgrupada not in self.NovasProducoes) or (self.NovasProducoes[producaoAgrupada][0] not in self.Estados)):
             for i in producoes:                                                         # Faz um loop nas produções que que contém a indeterminação
                 for j in sorted(self.Alfabeto):                                         # Faz um loop no conjunto de símbolos do alfabeto
-                    if j in estadoTemporario:                                           # Se o o símbolo j já estiver no estado temporário:
-                        lista = list(set(estadoTemporario[j] + self.Estados[i][j]));    # Adiciona a lista de transições de j
+                    if j in estadoTemporario:                                           # Se o o símbolo j já estiver no estado temporário:                        
+                        lista = list(set(estadoTemporario[j] + self.pegarProducaoOriginal(self.Estados[i][j])));    # Adiciona a lista de transições de j
                         estadoTemporario[j] = lista;                                    # ao estado
                     
                         if (len(lista) > 1) and (not self.existeProducaoAgrupada(lista)):
@@ -215,6 +215,16 @@ class Automato(object):
             self.substituiNovaProducao();
 
         return;
+
+
+    def pegarProducaoOriginal(self, producaoOrig):
+        retorno = list(set(producaoOrig));
+        for producao in self.NovasProducoes:
+            for prod in producaoOrig:
+                if self.NovasProducoes[producao][0] == prod:
+                    retorno = list(set(self.NovasProducoes[producao][1]));
+
+        return retorno;
 
 
     def pegarNovoEstadoDetrminizacao(self):
