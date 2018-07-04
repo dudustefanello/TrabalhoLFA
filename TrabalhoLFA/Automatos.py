@@ -202,7 +202,7 @@ class Automato(object):
                             if self.existeProducaoAgrupada(producaoAgrupadaTemp):
                                 estadoTemporario.update({j: list(set(self.NovasProducoes[producaoAgrupada][1]))});
                         
-                        elif self.existeNovoEstado(producaoAtual[0]):
+                        elif (len(producaoAtual) > 0) and (self.existeNovoEstado(producaoAtual[0])):
                             for prod in self.NovasProducoes:
                                 if self.NovasProducoes[prod][0] == producaoAtual[0]:
                                     estadoTemporario.update({j: list(set(self.NovasProducoes[prod][1]))});
@@ -210,11 +210,9 @@ class Automato(object):
                             estadoTemporario.update({j: producaoAtual});
         
             self.setAlfabetoEstado(estadoTemporario);                                   # Relaciona o estado temporário com os símbolos do alfabeto        
-            self.Estados.update({self.NovasProducoes[self.geraProducaoAgrupada(producaoAgrupada)][0]: estadoTemporario});                        # Adiciona o estado temporário ao dicionário de estados da classe
+            if producaoAgrupada in self.NovasProducoes:
+                self.Estados.update({self.NovasProducoes[producaoAgrupada][0]: estadoTemporario});                        # Adiciona o estado temporário ao dicionário de estados da classe
             self.substituiNovaProducao();
-
-        #if producaoAgrupada in self.NovasProducoes:
-            #self.Estados[transicao][producao] = [self.NovasProducoes[producaoAgrupada][0]];
 
         return;
 
