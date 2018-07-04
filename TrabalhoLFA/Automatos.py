@@ -47,16 +47,20 @@ class Automato(object):
         estados = dict();                                                       # Inicia a estrutura temporária para guardar os estados
 
         ignorar = [' ', ':'];                                                   # Lista de caracteres que devem ser ignorados na leitura
+        qtdEstadosNovos = 0;
 
         # - Insere uma nova regra no mapa de regras
         def novaRegra(self, texto):
             if texto == 'S':                                                        # Se o identificador do estado for S:
                 estados.update({0: {}});                                            # Será adicionado no estado inicial
+                self.qtdEstadosNovos = 1;
                 regras.update({'S': 0});                                            # E mapeado para o estado inicial
 
             else:                                                                   # Senão:
-                numero = len(self.Estados) + len(regras) - 1;                       # Será inserida uma regra no
+                numero = len(self.Estados) + qtdEstadosNovos - 1;                       # Será inserida uma regra no
                 regras.update({texto: numero});                                     # último espaço do autômato
+                if regras[texto] in estados:
+                    self.qtdEstadosNovos += 1
                 estados.update({regras[texto]: {}});                                # E mapeado para o número do último estado
 
 
@@ -106,6 +110,7 @@ class Automato(object):
                     self.Finais.add(regraAtiva);                                # Marca a regra ativa como final.
 
             self.insereEstadosGramatica(estados);                               # Insere os estados criados localmente nos estados do automato
+            qtdEstadosNovos = 0;
 
 
     # -- Inserção das regras da gramática regular no automato
