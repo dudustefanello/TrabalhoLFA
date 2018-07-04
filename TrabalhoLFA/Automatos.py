@@ -172,13 +172,15 @@ class Automato(object):
 
 
     # -- Determiniza um estado do automato
-    def determinizar(self, transicao, producao):        
+    def determinizar(self, transicao, producao, novasProducoesSubstituir):        
         estadoTemporario = dict();                                                  # Cria um estado temporário
-        novoEstado = len(self.Estados);                                             # Dá nome/número ao estado que será criado
+        #novoEstado = len(self.Estados);                                             # Dá nome/número ao estado que será criado
         producoes = self.Estados[transicao][producao];
-        producaoAgrupada = self.geraProducaoAgrupada(producoes);
-        novasProducoesSubstituir = dict();
-        
+        producaoAgrupada = self.geraProducaoAgrupada(producoes);        
+
+        #if producaoAgrupada in novasProducoesSubstituir:
+        #    self.Estados[transicao][producao] = [novasProducoesSubstituir[producaoAgrupada][0]];
+
         if producaoAgrupada not in novasProducoesSubstituir:
             for i in producoes:                                                         # Faz um loop nas produções que que contém a indeterminação
                 for j in sorted(self.Alfabeto):                                         # Faz um loop no conjunto de símbolos do alfabeto
@@ -186,17 +188,23 @@ class Automato(object):
                         lista = list(set(estadoTemporario[j] + self.Estados[i][j]));    # Adiciona a lista de transições de j
                         estadoTemporario[j] = lista;                                    # ao estado
                     
-                        if len(lista) > 1:
+                        if (len(lista) > 1) and (not self.existeProducaoAgrupada(lista, novasProducoesSubstituir)):
+                            novoEstado = len(self.Estados) + len(novasProducoesSubstituir);
                             novasProducoesSubstituir.update({self.geraProducaoAgrupada(lista): [novoEstado,lista]});
 
-                    else:                                                               # Senão:
-                        estadoTemporario.update({j: list(set(self.Estados[i][j]))});    # Atualiza o estado temporário com o símbolo j e com a lista já existente no estado
+                    else:
+                        producaoAgrupadaTemp = self.geraProducaoAgrupada(list(set(self.Estados[i][j])));
+                        if self.existeProducaoAgrupada(producaoAgrupadaTemp, novasProducoesSubstituir):
+                            estadoTemporario.update({j: list(set(novasProducoesSubstituir[producaoAgrupadaTemp][1]))});
+                        else:
+                            estadoTemporario.update({j: list(set(self.Estados[i][j]))});
         
             self.setAlfabetoEstado(estadoTemporario);                                   # Relaciona o estado temporário com os símbolos do alfabeto        
-            self.Estados.update({novoEstado: estadoTemporario});                        # Adiciona o estado temporário ao dicionário de estados da classe
-            self.substituiNovaProducao(novasProducoesSubstituir);                        
-        else:
-            print('nao tem');
+            self.Estados.update({novasProducoesSubstituir[self.geraProducaoAgrupada(producaoAgrupada)][0]: estadoTemporario});                        # Adiciona o estado temporário ao dicionário de estados da classe
+            self.substituiNovaProducao(novasProducoesSubstituir);
+
+        #if producaoAgrupada in novasProducoesSubstituir:
+            #self.Estados[transicao][producao] = [novasProducoesSubstituir[producaoAgrupada][0]];
 
         return;                 
     
@@ -205,27 +213,34 @@ class Automato(object):
         estado = '';
         for item in lista:
             estado += str(item);
-        print('novoEstadoCompactado [$]', estado);
 
         return estado;
 
 
     def substituiNovaProducao(self, novasProducoesSubstituir):
-        if len(novasProducoesSubstituir) > 0:
-            for letra in list(novasProducoesSubstituir):
-                for transicoes in self.Estados:
+        if len(novasProducoesSubstituir) > 0:            
+            for transicoes in self.Estados:
+                for letra in sorted(self.Alfabeto): 
                     if len(self.Estados[transicoes][letra]) > 1:
-                        self.Estados[transicoes][letra] = [novasProducoesSubstituir[letra][0]];
+                        producaoAgrupadaTemp = self.geraProducaoAgrupada(self.Estados[transicoes][letra]);
+                        if producaoAgrupadaTemp in novasProducoesSubstituir:
+                            self.Estados[transicoes][letra] = [novasProducoesSubstituir[producaoAgrupadaTemp][0]];
+
+
+    def existeProducaoAgrupada(self, lista, novasProducoesSubstituir):
+        producaoAgrupadaTemp = self.geraProducaoAgrupada(lista);
+        return (producaoAgrupadaTemp in novasProducoesSubstituir);
 
                         
     # -- Percorre o autômato identificando e tratando seus indeterminismos
     def buscarIndeterminismo(self):
         qtdEstados = len(self.Estados);                                         # Marca a quantidade inicial de estados do autômato
+        novasProducoesSubstituir = dict();
         i = 0;                                                                  # Zera a variável de índice
         while i < qtdEstados:                                                   # Faz um loop pelos estados
             for j in sorted(self.Alfabeto):                                     # Itera um laço pelo conjunto de símbolos do alfabeto
                 if i in self.Estados and len(self.Estados[i][j]) > 1:           # Se houver uma transição estiver indeterminada:
-                    self.determinizar(i,j);                                     # Determiniza o estado
+                    self.determinizar(i,j,novasProducoesSubstituir);                                     # Determiniza o estado
 
                     qtdEstados = len(self.Estados);                             # Atualiza a quantidade de estados
             i += 1;                                                             # Incrmenta o índice.
