@@ -10,6 +10,7 @@ class Automato(object):
     Alfabeto = set();   # Estrutura que contém todos os símbolos do alfabeto
     Finais = set();     # Estrutura que contém os estados que são finais
     Texto = str();      # Campo para guardar a string de entrada
+    NovasProducoes = dict();
 
 
     # -- Inicialização da classe:
@@ -17,6 +18,7 @@ class Automato(object):
         self.Estados = dict();          # Inicializa o dictionary de estados com uma estrutura vazia
         self.Alfabeto = set();          # Inicializa o set do alfabeto com uma estrutura vazia
         self.Finais = set();            # Inicializa o set de estados finais com uma estrutura vazia
+        self.NovasProducoes = dict();
 
         arquivo = open(arquivo, 'r');   # Abre o arquivo de entrada
         self.Texto = arquivo.read();    # Converte o arquivo para string
@@ -172,41 +174,58 @@ class Automato(object):
 
 
     # -- Determiniza um estado do automato
-    def determinizar(self, transicao, producao, novasProducoesSubstituir):        
+    def determinizar(self, producoes):        
         estadoTemporario = dict();                                                  # Cria um estado temporário
         #novoEstado = len(self.Estados);                                             # Dá nome/número ao estado que será criado
-        producoes = self.Estados[transicao][producao];
-        producaoAgrupada = self.geraProducaoAgrupada(producoes);        
+        #producoes = transicoes;
+        producaoAgrupada = self.geraProducaoAgrupada(producoes); 
 
-        #if producaoAgrupada in novasProducoesSubstituir:
-        #    self.Estados[transicao][producao] = [novasProducoesSubstituir[producaoAgrupada][0]];
+        #if producaoAgrupada in self.NovasProducoes:
+        #    self.Estados[transicao][producao] = [self.NovasProducoes[producaoAgrupada][0]];
 
-        if producaoAgrupada not in novasProducoesSubstituir:
+        if ((producaoAgrupada not in self.NovasProducoes) or (self.NovasProducoes[producaoAgrupada][0] not in self.Estados)):
             for i in producoes:                                                         # Faz um loop nas produções que que contém a indeterminação
                 for j in sorted(self.Alfabeto):                                         # Faz um loop no conjunto de símbolos do alfabeto
                     if j in estadoTemporario:                                           # Se o o símbolo j já estiver no estado temporário:
                         lista = list(set(estadoTemporario[j] + self.Estados[i][j]));    # Adiciona a lista de transições de j
                         estadoTemporario[j] = lista;                                    # ao estado
                     
-                        if (len(lista) > 1) and (not self.existeProducaoAgrupada(lista, novasProducoesSubstituir)):
-                            novoEstado = len(self.Estados) + len(novasProducoesSubstituir);
-                            novasProducoesSubstituir.update({self.geraProducaoAgrupada(lista): [novoEstado,lista]});
+                        if (len(lista) > 1) and (not self.existeProducaoAgrupada(lista)):
+                            novoEstado = self.pegarNovoEstadoDetrminizacao();
+                            self.NovasProducoes.update({self.geraProducaoAgrupada(lista): [novoEstado,lista]});
 
                     else:
-                        producaoAgrupadaTemp = self.geraProducaoAgrupada(list(set(self.Estados[i][j])));
-                        if self.existeProducaoAgrupada(producaoAgrupadaTemp, novasProducoesSubstituir):
-                            estadoTemporario.update({j: list(set(novasProducoesSubstituir[producaoAgrupadaTemp][1]))});
+                        producaoAtual = list(set(self.Estados[i][j]));
+                        
+                        if len(producaoAtual) > 1:
+                            producaoAgrupadaTemp = self.geraProducaoAgrupada(producaoAtual);
+                            if self.existeProducaoAgrupada(producaoAgrupadaTemp):
+                                estadoTemporario.update({j: list(set(self.NovasProducoes[producaoAgrupada][1]))});
+                        
+                        elif self.existeNovoEstado(producaoAtual[0]):
+                            for prod in self.NovasProducoes:
+                                if self.NovasProducoes[prod][0] == producaoAtual[0]:
+                                    estadoTemporario.update({j: list(set(self.NovasProducoes[prod][1]))});
                         else:
-                            estadoTemporario.update({j: list(set(self.Estados[i][j]))});
+                            estadoTemporario.update({j: producaoAtual});
         
             self.setAlfabetoEstado(estadoTemporario);                                   # Relaciona o estado temporário com os símbolos do alfabeto        
-            self.Estados.update({novasProducoesSubstituir[self.geraProducaoAgrupada(producaoAgrupada)][0]: estadoTemporario});                        # Adiciona o estado temporário ao dicionário de estados da classe
-            self.substituiNovaProducao(novasProducoesSubstituir);
+            self.Estados.update({self.NovasProducoes[self.geraProducaoAgrupada(producaoAgrupada)][0]: estadoTemporario});                        # Adiciona o estado temporário ao dicionário de estados da classe
+            self.substituiNovaProducao();
 
-        #if producaoAgrupada in novasProducoesSubstituir:
-            #self.Estados[transicao][producao] = [novasProducoesSubstituir[producaoAgrupada][0]];
+        #if producaoAgrupada in self.NovasProducoes:
+            #self.Estados[transicao][producao] = [self.NovasProducoes[producaoAgrupada][0]];
 
-        return;                 
+        return;
+
+
+    def pegarNovoEstadoDetrminizacao(self):
+        novoEstado = len(self.Estados);
+        for producao in self.NovasProducoes:
+            if self.NovasProducoes[producao][0] not in list(self.Estados):
+                novoEstado += 1;
+
+        return novoEstado;
     
 
     def geraProducaoAgrupada(self, lista):
@@ -217,33 +236,48 @@ class Automato(object):
         return estado;
 
 
-    def substituiNovaProducao(self, novasProducoesSubstituir):
-        if len(novasProducoesSubstituir) > 0:            
+    def substituiNovaProducao(self):
+        if len(self.NovasProducoes) > 0:            
             for transicoes in self.Estados:
                 for letra in sorted(self.Alfabeto): 
                     if len(self.Estados[transicoes][letra]) > 1:
                         producaoAgrupadaTemp = self.geraProducaoAgrupada(self.Estados[transicoes][letra]);
-                        if producaoAgrupadaTemp in novasProducoesSubstituir:
-                            self.Estados[transicoes][letra] = [novasProducoesSubstituir[producaoAgrupadaTemp][0]];
+                        if producaoAgrupadaTemp in self.NovasProducoes:
+                            self.Estados[transicoes][letra] = [self.NovasProducoes[producaoAgrupadaTemp][0]];
 
 
-    def existeProducaoAgrupada(self, lista, novasProducoesSubstituir):
+    def existeProducaoAgrupada(self, lista):
         producaoAgrupadaTemp = self.geraProducaoAgrupada(lista);
-        return (producaoAgrupadaTemp in novasProducoesSubstituir);
+        temp = (producaoAgrupadaTemp in self.NovasProducoes);
+        return temp;
+
+
+    def existeNovoEstado(self, producao):
+        if len(self.NovasProducoes) > 0:
+            for producaoAgrupada in self.NovasProducoes:
+                if self.NovasProducoes[producaoAgrupada][0] == producao:
+                    return True;
+
+        return False;
 
                         
     # -- Percorre o autômato identificando e tratando seus indeterminismos
     def buscarIndeterminismo(self):
         qtdEstados = len(self.Estados);                                         # Marca a quantidade inicial de estados do autômato
-        novasProducoesSubstituir = dict();
         i = 0;                                                                  # Zera a variável de índice
         while i < qtdEstados:                                                   # Faz um loop pelos estados
             for j in sorted(self.Alfabeto):                                     # Itera um laço pelo conjunto de símbolos do alfabeto
                 if i in self.Estados and len(self.Estados[i][j]) > 1:           # Se houver uma transição estiver indeterminada:
-                    self.determinizar(i,j,novasProducoesSubstituir);                                     # Determiniza o estado
+                    self.determinizar(self.Estados[i][j]);                                     # Determiniza o estado
 
                     qtdEstados = len(self.Estados);                             # Atualiza a quantidade de estados
             i += 1;                                                             # Incrmenta o índice.
+            
+            if i == qtdEstados:
+                for novoEstado in list(self.NovasProducoes):
+                    if self.NovasProducoes[novoEstado][0] not in self.Estados:
+                        self.determinizar(self.NovasProducoes[novoEstado][1]); 
+                        qtdEstados = len(self.Estados); 
 
 
     def buscarEpsilonTransicoes(self):        
