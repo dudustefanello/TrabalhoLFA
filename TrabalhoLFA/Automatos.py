@@ -102,15 +102,16 @@ class Automato(object):
                     novaTransicao(self, EPSILON, word[2]);                        # Adiciona uma nova transição à regra ativa
                     word = '';                                                  # Reinicia a palavra
 
-                elif word == '/'+FINAL:                                             # Se foi encontrado um caractere que indica estado final:
+                elif ((word == '/' + FINAL) or (word == '=' + FINAL)):                                             # Se foi encontrado um caractere que indica estado final:
                     self.Finais.add(regraAtiva);                                # Marca a regra ativa como final.
 
             self.insereEstadosGramatica(estados);                               # Insere os estados criados localmente nos estados do automato
 
 
     # -- Inserção das regras da gramática regular no automato
-    def insereEstadosGramatica(self, estados):
+    def insereEstadosGramatica(self, estados):        
         for nome, estado in estados.items():                                        # Faz um loop no estado temporário
+            self.setAlfabetoEstado(estado);
             for simbolo, transicoes in estado.items():                              # Faz um loop no transições do estado temporário
                 if nome not in self.Estados:                                        # Se o nome/número do estado não existe no automato:
                     self.Estados.update({nome: {}});                                # Adiciona o estado ao automato
@@ -183,8 +184,8 @@ class Automato(object):
         #if producaoAgrupada in self.NovasProducoes:
         #    self.Estados[transicao][producao] = [self.NovasProducoes[producaoAgrupada][0]];
 
-        if ((producaoAgrupada not in self.NovasProducoes) or (self.NovasProducoes[producaoAgrupada][0] not in self.Estados)):
-            if not self.existeProducaoAgrupada(producoes):
+        if ((producaoAgrupada not in self.NovasProducoes) or (self.NovasProducoes[producaoAgrupada][0] not in self.Estados)):            
+            if (len(producoes) > 1) and (not self.existeProducaoAgrupada(producoes)):
                 novoEstado = self.pegarNovoEstadoDetrminizacao();
                 self.NovasProducoes.update({self.geraProducaoAgrupada(producoes): [novoEstado,producoes]});
             for i in producoes:                                                         # Faz um loop nas produções que que contém a indeterminação
@@ -214,10 +215,16 @@ class Automato(object):
         
             self.setAlfabetoEstado(estadoTemporario);                                   # Relaciona o estado temporário com os símbolos do alfabeto                    
             self.Estados.update({self.NovasProducoes[producaoAgrupada][0]: estadoTemporario});                        # Adiciona o estado temporário ao dicionário de estados da classe
+            self.adicionaEstadoFinal(producoes, self.NovasProducoes[producaoAgrupada][0]);
             self.substituiNovaProducao();
 
         return;
 
+
+    def adicionaEstadoFinal(self, producoes, novaProducao):
+        for producao in producoes:
+            if producao in self.Finais:
+                self.Finais.add(novaProducao);
 
     def pegarProducaoOriginal(self, producaoOrig):
         retorno = list(set(producaoOrig));
