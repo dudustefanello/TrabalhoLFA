@@ -23,3 +23,9 @@ fim
 <S> ::= a<S> | b<A> | b<B> | c<B>
 <A> ::= a<B> | b<A> | c<S>
 <B> ::= a<A> | b<B> | c<S> | c<A>
+
+<S> ::= a<A> | b<B> | b<X> | c<S> | c<X>
+<A> ::= a<S> | a<X> | b<C> | c<A>
+<B> ::= a<A> | c<B> | c<S> | c<X>
+<C> ::= a<S> | a<X> | c<A> | c<C>
+<X> ::= $
