@@ -1,4 +1,5 @@
 import re
+from Producao import Producao;
 
 FINAL = '$'
 EPSILON = '#'
@@ -352,3 +353,42 @@ class Automato(object):
             i += 1;
 
         self.Alfabeto.remove(EPSILON);
+
+
+    def removerInalcancaveis(self):
+        estados = self.gerarEstadosParaMinimizacao();
+
+        for producoes in list(estados[0]): # Parte do estado inicial percorrendo todos;
+            for transicao in producoes:
+                self.visitaNovaProducao(estados, transicao, []);
+
+    def visitaNovaProducao(self, estados, transicao, visitados):
+        for producao in estados[transicao]:
+            print('visitaNovaProducao', transicao, producao, visitados);
+
+            if estados[transicao][producao].visitado:
+                return;
+        
+            estados[transicao][producao].visitado = True;
+        
+            visitados = list(set([estados[transicao][producao].producao] + visitados));
+
+            if estados[transicao][producao].producao in self.Finais:
+                return;
+
+            for proximaProducao in list(estados[transicao]): # Parte do estado inicial percorrendo todos;
+                self.visitaNovaProducao(estados, proximaProducao, producoes,[]);
+
+    
+    def removerMortos(self):
+        print('');
+
+    
+    def gerarEstadosParaMinimizacao(self):
+        estadosTemp = self.Estados.copy();
+        for transicao in estadosTemp:
+            for producao in list(estadosTemp[transicao]):
+                estadosTemp[transicao][producao] = Producao(estadosTemp[transicao][producao][0])
+                print(estadosTemp[transicao][producao].producao);
+
+        return estadosTemp;
