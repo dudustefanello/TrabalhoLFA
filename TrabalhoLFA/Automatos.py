@@ -184,15 +184,16 @@ class Automato(object):
         #    self.Estados[transicao][producao] = [self.NovasProducoes[producaoAgrupada][0]];
 
         if ((producaoAgrupada not in self.NovasProducoes) or (self.NovasProducoes[producaoAgrupada][0] not in self.Estados)):
-            novoEstado = self.pegarNovoEstadoDetrminizacao();
-            self.NovasProducoes.update({self.geraProducaoAgrupada(producoes): [novoEstado,producoes]});
+            if not self.existeProducaoAgrupada(producoes):
+                novoEstado = self.pegarNovoEstadoDetrminizacao();
+                self.NovasProducoes.update({self.geraProducaoAgrupada(producoes): [novoEstado,producoes]});
             for i in producoes:                                                         # Faz um loop nas produções que que contém a indeterminação
                 for j in sorted(self.Alfabeto):                                         # Faz um loop no conjunto de símbolos do alfabeto
                     if j in estadoTemporario:                                           # Se o o símbolo j já estiver no estado temporário:                        
                         lista = list(set(estadoTemporario[j] + self.pegarProducaoOriginal(self.Estados[i][j])));    # Adiciona a lista de transições de j
                         estadoTemporario[j] = lista;                                    # ao estado
                     
-                        if (len(lista) > 0) and (not self.existeProducaoAgrupada(lista)):
+                        if (len(lista) > 1) and (not self.existeProducaoAgrupada(lista)):
                             novoEstado = self.pegarNovoEstadoDetrminizacao();
                             self.NovasProducoes.update({self.geraProducaoAgrupada(lista): [novoEstado,lista]});
 
@@ -229,12 +230,11 @@ class Automato(object):
 
 
     def pegarNovoEstadoDetrminizacao(self):
-        novoEstado = len(self.Estados);
+        novasProducoes = [];
         for producao in self.NovasProducoes:
-            if self.NovasProducoes[producao][0] not in list(self.Estados):
-                novoEstado += 1;
+            novasProducoes.append(self.NovasProducoes[producao][0]);
 
-        return novoEstado;
+        return len(set(list(self.Estados) + novasProducoes));
     
 
     def geraProducaoAgrupada(self, lista):
