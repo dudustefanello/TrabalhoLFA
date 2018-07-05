@@ -46,17 +46,17 @@ class Automato(object):
         regras = dict();                                                        # Inicia a estrutura temporária para mapeamento das regras
         estados = dict();                                                       # Inicia a estrutura temporária para guardar os estados
 
-        ignorar = [' ', ':'];                                                   # Lista de caracteres que devem ser ignorados na leitura
+        ignorar = [' ', ':'];                                                   # Lista de caracteres que devem ser ignorados na leitura        
 
         # - Insere uma nova regra no mapa de regras
         def novaRegra(self, texto):
             if texto == 'S':                                                        # Se o identificador do estado for S:
-                estados.update({0: {}});                                            # Será adicionado no estado inicial
+                estados.update({0: {}});                                            # Será adicionado no estado inicial                
                 regras.update({'S': 0});                                            # E mapeado para o estado inicial
 
             else:                                                                   # Senão:
-                numero = len(self.Estados) + len(regras) - 1;                       # Será inserida uma regra no
-                regras.update({texto: numero});                                     # último espaço do autômato
+                numero = len(set(list(self.Estados) + list(estados)));                       # Será inserida uma regra no
+                regras.update({texto: numero});                                     # último espaço do autômato                
                 estados.update({regras[texto]: {}});                                # E mapeado para o número do último estado
 
 
@@ -184,6 +184,8 @@ class Automato(object):
         #    self.Estados[transicao][producao] = [self.NovasProducoes[producaoAgrupada][0]];
 
         if ((producaoAgrupada not in self.NovasProducoes) or (self.NovasProducoes[producaoAgrupada][0] not in self.Estados)):
+            novoEstado = self.pegarNovoEstadoDetrminizacao();
+            self.NovasProducoes.update({self.geraProducaoAgrupada(producoes): [novoEstado,producoes]});
             for i in producoes:                                                         # Faz um loop nas produções que que contém a indeterminação
                 for j in sorted(self.Alfabeto):                                         # Faz um loop no conjunto de símbolos do alfabeto
                     if j in estadoTemporario:                                           # Se o o símbolo j já estiver no estado temporário:                        
@@ -192,7 +194,7 @@ class Automato(object):
                     
                         if (len(lista) > 0) and (not self.existeProducaoAgrupada(lista)):
                             novoEstado = self.pegarNovoEstadoDetrminizacao();
-                            self.NovasProducoes.update({producaoAgrupada: [novoEstado,lista]});
+                            self.NovasProducoes.update({self.geraProducaoAgrupada(lista): [novoEstado,lista]});
 
                     else:
                         producaoAtual = list(set(self.Estados[i][j]));
@@ -257,9 +259,16 @@ class Automato(object):
 
 
     def existeProducaoAgrupada(self, lista):
-        producaoAgrupadaTemp = self.geraProducaoAgrupada(lista);
-        temp = (producaoAgrupadaTemp in self.NovasProducoes);
-        return temp;
+        retorno = False;
+
+        if len(lista) > 1:
+            producaoAgrupadaTemp = self.geraProducaoAgrupada(lista);
+            return (producaoAgrupadaTemp in self.NovasProducoes);
+        else:
+            for i in self.NovasProducoes:
+                if lista[0] in self.NovasProducoes[i][1]:
+                    return True;
+        return retorno;
 
 
     def existeNovoEstado(self, producao):
