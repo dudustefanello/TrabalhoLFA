@@ -12,6 +12,8 @@ class Automato(object):
     Finais = set();     # Estrutura que contém os estados que são finais
     Texto = str();      # Campo para guardar a string de entrada
     NovasProducoes = dict();
+    TransicoesVisitadas = list();
+    NovoAutomato = dict();
 
 
     # -- Inicialização da classe:
@@ -380,13 +382,15 @@ class Automato(object):
 
     def removerInalcancaveis(self):
         estados = self.gerarEstadosParaMinimizacao();
-        transVisitadas = [0];
+        self.TransicoesVisitadas = [];
 
-        for producoes in list(estados[0]): # Parte do estado inicial percorrendo todos;
-            estados[0][producoes].visitado = True;
-            self.visitaNovaProducao(estados, estados[0][producoes].producao, transVisitadas);
+        #for producoes in list(estados[0]): # Parte do estado inicial percorrendo todos;
+        #    estados[0][producoes].visitado = True;
+        #    self.visitaNovaProducao(estados, estados[0][producoes].producao, transVisitadas);
+
+        self.visitaNovaProducao(estados, 0);
         
-        #print('mapeamento concluído');
+        print('mapeamento concluído', self.TransicoesVisitadas);
 
         #Fazer função que retorna nova lista sem inalcançaveis;
         #for transicao in estados:
@@ -395,19 +399,23 @@ class Automato(object):
         #            del self.Estados[transicao][producao];
 
 
-    def visitaNovaProducao(self, estados, transicao, transVisitadas):
-         transVisitadas = list(set([transicao] + transVisitadas));
+    def visitaNovaProducao(self, estados, transicao):
+         self.TransicoesVisitadas = list(set([transicao] + self.TransicoesVisitadas));
          
          for producao in estados[transicao]:
             
             if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
                 continue;
+            
 
             if estados[transicao][producao].visitado:
                 return;
         
             estados[transicao][producao].visitado = True;                   
-            self.visitaNovaProducao(estados, estados[transicao][producao].producao, transVisitadas);
+
+            #self.NovoAutomato =
+
+            self.visitaNovaProducao(estados, estados[transicao][producao].producao);            
 
     
     def removerMortos(self):
