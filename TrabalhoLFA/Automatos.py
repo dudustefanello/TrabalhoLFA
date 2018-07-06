@@ -13,7 +13,7 @@ class Automato(object):
     Texto = str();      # Campo para guardar a string de entrada
     NovasProducoes = dict();
     TransicoesVisitadas = list();
-    NovoAutomato = dict();
+    AutomatoMinimizado = dict();
 
 
     # -- Inicialização da classe:
@@ -22,6 +22,7 @@ class Automato(object):
         self.Alfabeto = set();          # Inicializa o set do alfabeto com uma estrutura vazia
         self.Finais = set();            # Inicializa o set de estados finais com uma estrutura vazia
         self.NovasProducoes = dict();
+        self.AutomatoMinimizado = dict();
 
         arquivo = open(arquivo, 'r');   # Abre o arquivo de entrada
         self.Texto = arquivo.read();    # Converte o arquivo para string
@@ -140,7 +141,20 @@ class Automato(object):
 
             print('');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
 
+    # -- Imprime o automato finito deterministico
     def imprimirMinimizado(self):
+        for nome, estado in self.AutomatoMinimizado.items():                   # Faz um loop nos estados
+            print(' *' if nome in self.Finais else '  ', end='');   # Marca os estados que são finais
+            print(nome, end=' = ');                                 # Imprime o nome/numero do estado
+
+            for simbolo, transicoes in estado.items():              # Faz um loop em cada estado
+                
+                if len(transicoes) > 0:                             # Se existir transições para um símbolo
+                    print(simbolo, transicoes, end=', ');           # Imprime o símbolo e a lista de transições
+
+            print('');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
+
+    def imprimirMinimizado2(self):
         for nome, estado in self.Estados.items():                   # Faz um loop nos estados
             print(' *' if nome in self.Finais else '  ', end='');   # Marca os estados que são finais
             print(nome, end=' = ');                                 # Imprime o nome/numero do estado
@@ -390,7 +404,8 @@ class Automato(object):
 
         self.visitaNovaProducao(estados, 0);
         
-        print('mapeamento concluído', self.TransicoesVisitadas);
+        #---
+        #print('mapeamento concluído', self.AutomatoMinimizado);
 
         #Fazer função que retorna nova lista sem inalcançaveis;
         #for transicao in estados:
@@ -413,9 +428,23 @@ class Automato(object):
         
             estados[transicao][producao].visitado = True;                   
 
-            #self.NovoAutomato =
+            #if transicao not in self.AutomatoMinimizado:
+            #    self.AutomatoMinimizado.update({transicao : {producao: [estados[transicao][producao].producao]}});
+            #else:
+            #    if producao not in self.AutomatoMinimizado[transicao]:
+            #        self.AutomatoMinimizado[transicao].update({producao: [estados[transicao][producao].producao]});
+
+            self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
 
             self.visitaNovaProducao(estados, estados[transicao][producao].producao);            
+
+
+    def adicionaAutomatoMinimizado(self,transicao,producaoAtual,producaoInserir):
+        if transicao not in self.AutomatoMinimizado:
+            self.AutomatoMinimizado.update({transicao : {producaoAtual: [producaoInserir]}});
+        else:
+            if producaoAtual not in self.AutomatoMinimizado[transicao]:
+                self.AutomatoMinimizado[transicao].update({producaoAtual: [producaoInserir]});        
 
     
     def removerMortos(self):
