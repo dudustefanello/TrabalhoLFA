@@ -397,21 +397,8 @@ class Automato(object):
     def removerInalcancaveis(self):
         estados = self.gerarEstadosParaMinimizacao();
         self.TransicoesVisitadas = [];
-
-        #for producoes in list(estados[0]): # Parte do estado inicial percorrendo todos;
-        #    estados[0][producoes].visitado = True;
-        #    self.visitaNovaProducao(estados, estados[0][producoes].producao, transVisitadas);
-
-        self.visitaNovaProducao(estados, 0);
-        
-        #---
+        self.visitaNovaProducao(estados, 0);        
         #print('mapeamento concluído', self.AutomatoMinimizado);
-
-        #Fazer função que retorna nova lista sem inalcançaveis;
-        #for transicao in estados:
-        #    for producao in estados[transicao]:
-        #        if not estados[transicao][producao].visitado:
-        #            del self.Estados[transicao][producao];
 
 
     def visitaNovaProducao(self, estados, transicao):
@@ -422,20 +409,11 @@ class Automato(object):
             if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
                 continue;
             
-
             if estados[transicao][producao].visitado:
                 return;
         
-            estados[transicao][producao].visitado = True;                   
-
-            #if transicao not in self.AutomatoMinimizado:
-            #    self.AutomatoMinimizado.update({transicao : {producao: [estados[transicao][producao].producao]}});
-            #else:
-            #    if producao not in self.AutomatoMinimizado[transicao]:
-            #        self.AutomatoMinimizado[transicao].update({producao: [estados[transicao][producao].producao]});
-
+            estados[transicao][producao].visitado = True;
             self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
-
             self.visitaNovaProducao(estados, estados[transicao][producao].producao);            
 
 
@@ -452,12 +430,26 @@ class Automato(object):
 
     #atualmente esta lista temp não esta clonando, as referencias com o original permanecem, precisa criar nova estrutura;
     def gerarEstadosParaMinimizacao(self):
-        estadosTemp = self.Estados.copy();
-        for transicao in estadosTemp:
-            for producao in list(estadosTemp[transicao]):
-                if len(estadosTemp[transicao][producao]) > 0:
-                    estadosTemp[transicao][producao] = Producao(estadosTemp[transicao][producao][0]);
+        estadosTemp = dict();
+
+        for transicao in self.Estados:
+            for producao in list(self.Estados[transicao]):
+                if len(self.Estados[transicao][producao]) > 0:
+                    if transicao not in estadosTemp: #--
+                        estadosTemp.update({transicao : {producao: Producao(self.Estados[transicao][producao][0])}});
+                    else:
+                        if producao not in estadosTemp[transicao]:
+                            estadosTemp[transicao].update({producao: Producao(self.Estados[transicao][producao][0])});
                 else:
-                    estadosTemp[transicao][producao] = Producao(-1);
+                    if ((transicao in estadosTemp) and (producao not in estadosTemp[transicao])):
+                            estadosTemp[transicao].update({producao: Producao(-1)});
+
+
+        #for transicao in estadosTemp:
+        #    for producao in list(estadosTemp[transicao]):
+        #        if len(estadosTemp[transicao][producao]) > 0:
+        #            estadosTemp[transicao][producao] = Producao(estadosTemp[transicao][producao][0]);
+        #        else:
+        #            estadosTemp[transicao][producao] = Producao(-1);
 
         return estadosTemp;
