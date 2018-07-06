@@ -132,8 +132,31 @@ class Automato(object):
             print(nome, end=' = ');                                 # Imprime o nome/numero do estado
 
             for simbolo, transicoes in estado.items():              # Faz um loop em cada estado
+                
                 if len(transicoes) > 0:                             # Se existir transições para um símbolo
                     print(simbolo, transicoes, end=', ');           # Imprime o símbolo e a lista de transições
+
+            print('');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
+
+    def imprimirMinimizado(self):
+        for nome, estado in self.Estados.items():                   # Faz um loop nos estados
+            print(' *' if nome in self.Finais else '  ', end='');   # Marca os estados que são finais
+            print(nome, end=' = ');                                 # Imprime o nome/numero do estado
+
+            inalcancavel = False;
+            for simbolo, transicoes in estado.items():              # Faz um loop em cada estado                
+                #if len(transicoes) > 0:                             # Se existir transições para um símbolo
+                
+                if not transicoes.temProducao():
+                    continue;
+
+                if not transicoes.visitado:
+                    inalcancavel = True;              
+                
+                print(simbolo, [transicoes.producao], end=', ');           # Imprime o símbolo e a lista de transições
+            
+            if inalcancavel:
+                print('+', end='');
 
             print('');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
 
@@ -357,38 +380,47 @@ class Automato(object):
 
     def removerInalcancaveis(self):
         estados = self.gerarEstadosParaMinimizacao();
+        transVisitadas = [0];
 
         for producoes in list(estados[0]): # Parte do estado inicial percorrendo todos;
-            for transicao in producoes:
-                self.visitaNovaProducao(estados, transicao, []);
+            estados[0][producoes].visitado = True;
+            self.visitaNovaProducao(estados, estados[0][producoes].producao, transVisitadas);
+        
+        #print('mapeamento concluído');
 
-    def visitaNovaProducao(self, estados, transicao, visitados):
-        for producao in estados[transicao]:
-            print('visitaNovaProducao', transicao, producao, visitados);
+        #Fazer função que retorna nova lista sem inalcançaveis;
+        #for transicao in estados:
+        #    for producao in estados[transicao]:
+        #        if not estados[transicao][producao].visitado:
+        #            del self.Estados[transicao][producao];
+
+
+    def visitaNovaProducao(self, estados, transicao, transVisitadas):
+         transVisitadas = list(set([transicao] + transVisitadas));
+         
+         for producao in estados[transicao]:
+            
+            if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
+                continue;
 
             if estados[transicao][producao].visitado:
                 return;
         
-            estados[transicao][producao].visitado = True;
-        
-            visitados = list(set([estados[transicao][producao].producao] + visitados));
-
-            if estados[transicao][producao].producao in self.Finais:
-                return;
-
-            for proximaProducao in list(estados[transicao]): # Parte do estado inicial percorrendo todos;
-                self.visitaNovaProducao(estados, proximaProducao, producoes,[]);
+            estados[transicao][producao].visitado = True;                   
+            self.visitaNovaProducao(estados, estados[transicao][producao].producao, transVisitadas);
 
     
     def removerMortos(self):
         print('');
 
-    
+    #atualmente esta lista temp não esta clonando, as referencias com o original permanecem, precisa criar nova estrutura;
     def gerarEstadosParaMinimizacao(self):
         estadosTemp = self.Estados.copy();
         for transicao in estadosTemp:
             for producao in list(estadosTemp[transicao]):
-                estadosTemp[transicao][producao] = Producao(estadosTemp[transicao][producao][0])
-                print(estadosTemp[transicao][producao].producao);
+                if len(estadosTemp[transicao][producao]) > 0:
+                    estadosTemp[transicao][producao] = Producao(estadosTemp[transicao][producao][0]);
+                else:
+                    estadosTemp[transicao][producao] = Producao(-1);
 
         return estadosTemp;

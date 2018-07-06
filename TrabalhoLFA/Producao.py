@@ -7,4 +7,5 @@ class Producao():
        self.producao = producao;
        self.visitado = False;
 
-
+    def temProducao(self):
+        return self.producao >= 0;
