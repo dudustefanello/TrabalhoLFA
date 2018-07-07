@@ -7,8 +7,5 @@ automato.buscarEpsilonTransicoes();     # Busca os épsilon transições e trata
 automato.buscarIndeterminismo();        # Busca indeterminismos para determinizar
 automato.removerInalcancaveis();
 automato.removerMortos();
-automato.imprimirMinimizado();
-
-
-#automato.imprimir();                    # Imprimir automato final
+automato.imprimir();                    # Imprimir automato final
 

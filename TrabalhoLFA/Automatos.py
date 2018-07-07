@@ -130,7 +130,8 @@ class Automato(object):
 
     # -- Imprime o automato finito deterministico
     def imprimir(self):
-        for nome, estado in self.Estados.items():                   # Faz um loop nos estados
+        estados = self.pegarAutomato();
+        for nome, estado in estados.items():                   # Faz um loop nos estados
             print(' *' if nome in self.Finais else '  ', end='');   # Marca os estados que são finais
             print(nome, end=' = ');                                 # Imprime o nome/numero do estado
 
@@ -395,14 +396,11 @@ class Automato(object):
 
 
     def removerInalcancaveis(self):
-        estados = self.gerarEstadosParaMinimizacao();        
-        self.TransicoesVisitadas = [];
-        self.visitaNovaProducaoInalcancavel(estados, 0);        
-        #print('mapeamento concluído', self.AutomatoMinimizado);
+        estados = self.gerarEstadosParaMinimizacao();
+        self.visitaNovaProducaoInalcancavel(estados, 0);
 
 
     def visitaNovaProducaoInalcancavel(self, estados, transicao):
-         self.TransicoesVisitadas = list(set([transicao] + self.TransicoesVisitadas));
          
          for producao in estados[transicao]:
             
@@ -456,13 +454,18 @@ class Automato(object):
         estados = self.gerarEstadosParaMinimizacao();
         self.TransicoesVisitadas = [];
         self.AutomatoMinimizado = dict();
-        self.visitaNovaProducaoMortos(estados, 0);
+
+        for transicao in estados:
+            for producao in estados[transicao]:
+                self.visitaNovaProducaoMortos(estados, transicao);
+                estados[transicao][producao].chegouEstadoTerminal = self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
         
 
     def visitaNovaProducaoMortos(self, estados, transicao):
         #self.TransicoesVisitadas = list(set([transicao] + self.TransicoesVisitadas));
+            
+        for producao in estados[transicao]:            
 
-        for producao in estados[transicao]:
             if estados[transicao][producao].chegouEstadoTerminal or (transicao in self.Finais):
                 return True;            
             
@@ -470,17 +473,16 @@ class Automato(object):
                 return False;
 
             if estados[transicao][producao].visitado:
-                return estados[transicao][producao].chegouEstadoTerminal;
-                #continue;
+                continue;
 
         
             estados[transicao][producao].visitado = True;
+                       
             
-            chegouEstatoTerminal = self.visitaNovaProducaoMortos(estados, estados[transicao][producao].producao);
-            
-            if chegouEstatoTerminal:
+            if self.visitaNovaProducaoMortos(estados, estados[transicao][producao].producao):
                 estados[transicao][producao].chegouEstadoTerminal = True;
                 self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
+                return True;
 
         return False;
 
