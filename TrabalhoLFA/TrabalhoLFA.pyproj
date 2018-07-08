@@ -25,6 +25,7 @@
     <Compile Include="Automatos.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Determinizacao.py" />
     <Compile Include="Producao.py">
       <SubType>Code</SubType>
     </Compile>
