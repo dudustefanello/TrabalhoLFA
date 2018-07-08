@@ -402,18 +402,18 @@ class Automato(object):
 
 
     def visitaNovaProducaoInalcancavel(self, estados, transicao):
-         
-         for producao in estados[transicao]:
+         if transicao in estados:
+             for producao in estados[transicao]:
             
-            if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
-                continue;
+                if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
+                    continue;
             
-            if estados[transicao][producao].visitado:
-                return;
+                if estados[transicao][producao].visitado:
+                    return;
         
-            estados[transicao][producao].visitado = True;
-            self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
-            self.visitaNovaProducaoInalcancavel(estados, estados[transicao][producao].producao);            
+                estados[transicao][producao].visitado = True;
+                self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
+                self.visitaNovaProducaoInalcancavel(estados, estados[transicao][producao].producao);            
 
 
     def adicionaAutomatoMinimizado(self,transicao,producaoAtual,producaoInserir):
@@ -464,17 +464,17 @@ class Automato(object):
 
     def visitaNovaProducaoMortos(self, estados, transicao):
         #self.TransicoesVisitadas = list(set([transicao] + self.TransicoesVisitadas));
-            
-        for producao in estados[transicao]:            
+        if transicao in estados:     
+            for producao in estados[transicao]:            
 
-            if estados[transicao][producao].chegouEstadoTerminal or (transicao in self.Finais):
-                return True;            
+                if estados[transicao][producao].chegouEstadoTerminal or (transicao in self.Finais):
+                    return True;            
             
-            if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
-                return False;
+                if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
+                    return False;
 
-            if estados[transicao][producao].visitado:
-                continue;
+                if estados[transicao][producao].visitado:
+                    continue;
 
         
             estados[transicao][producao].visitado = True;
