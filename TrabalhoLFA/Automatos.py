@@ -129,9 +129,10 @@ class Automato(object):
 
 
     # -- Imprime o automato finito deterministico
-    def imprimir(self):
+    def imprimir(self, mensagem = ''):
+        print(mensagem)
         estados = self.pegarAutomato();
-        for nome, estado in estados.items():                   # Faz um loop nos estados
+        for nome, estado in sorted(estados.items()):                   # Faz um loop nos estados
             print(' *' if nome in self.Finais else '  ', end='');   # Marca os estados que são finais
             print(nome, end=' = ');                                 # Imprime o nome/numero do estado
 
