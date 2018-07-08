@@ -6,7 +6,7 @@ automato.carrega();                     # Carrega o automato a partir da
 automato.imprimir('\n\n######################## AUTOMATO LIDO: ########################\n'); # Imprimir automato final
 
 automato.buscarEpsilonTransicoes();     # Busca os épsilon transições e trata as mesmas;
-automato.imprimir('\n\n####################### LIVRE DE EPSILON: ######################\n'); # Imprimir automato final
+automato.imprimir('\n\n################## LIVRE DE EPSILON TRANSIÇÕES: ################\n'); # Imprimir automato final
 
 automato.buscarIndeterminismo();        # Busca indeterminismos para determinizar
 automato.imprimir('\n\n######################## DETERMINIZADO: ########################\n'); # Imprimir automato final
