@@ -17,13 +17,15 @@ class Automato(object):
 
 
     # -- Inicialização da classe:
-    def __init__(self, arquivo):
+    def __init__(self):
         self.Estados = dict();          # Inicializa o dictionary de estados com uma estrutura vazia
         self.Alfabeto = set();          # Inicializa o set do alfabeto com uma estrutura vazia
         self.Finais = set();            # Inicializa o set de estados finais com uma estrutura vazia
         self.NovasProducoes = dict();
         self.AutomatoMinimizado = dict();
 
+
+    def leitura(self, arquivo):
         arquivo = open(arquivo, 'r');   # Abre o arquivo de entrada
         self.Texto = arquivo.read();    # Converte o arquivo para string
 
