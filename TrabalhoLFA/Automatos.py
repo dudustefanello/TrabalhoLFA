@@ -197,54 +197,6 @@ class Automato(object):
                             self.Estados[transicoes][letra] = [self.NovasProducoes[producaoAgrupadaTemp][0]];
 
 
-    def buscarEpsilonTransicoes(self):        
-        if EPSILON not in self.Alfabeto:
-            return
-
-        producoesComEpsilon = set();
-        qtdEpsilon = len(producoesComEpsilon);
-        qtdEstados = len(self.Estados); 
-        idxEpsilon = self.Alfabeto
-        i = 0;
-
-        while i < qtdEstados:                                                                       # Faz um loop pelos estados
-            if i in self.Estados and len(self.Estados[i][EPSILON]) > 0:                             # Se houver uma transição com épsion
-                self.removerEpsilonTransicoes(i, self.Estados[i][EPSILON][0], producoesComEpsilon);
-                qtdEstados = len(self.Estados);                                                     # Atualiza a quantidade de estados
-            i += 1;
-
-        self.removerEpsilonTransicoesEstados();
-
-
-    def removerEpsilonTransicoes(self, transicaoOriginal, transicaoEpsilon, producoesComEpsilon):
-        if len(self.Estados[transicaoOriginal][EPSILON]) > 0:
-
-            for producao in list(self.Estados[transicaoEpsilon]):
-                if producao != EPSILON and len(self.Estados[transicaoEpsilon][producao]) > 0:                    
-                    self.Estados[transicaoEpsilon][producao] = (list(set(self.Estados[transicaoEpsilon][producao] + self.Estados[transicaoOriginal][producao])));                    
-                    producoesComEpsilon.update(set(self.Estados[transicaoOriginal][EPSILON]));                    
-        
-        if len(self.Estados[transicaoEpsilon][EPSILON]) > 0:            
-            if self.Estados[transicaoEpsilon][EPSILON][0] not in producoesComEpsilon:
-                self.removerEpsilonTransicoes(transicaoEpsilon, self.Estados[transicaoEpsilon][EPSILON][0], producoesComEpsilon);
-
-
-    def removerEpsilonTransicoesEstados(self):
-        if EPSILON not in self.Alfabeto:
-            return
-        
-        qtdEstados = len(self.Estados); 
-        i = 0;
-        
-        while i < qtdEstados:                           # Faz um loop pelos estados
-            if i in self.Estados:                       # Se houver uma transição com Épsilon
-                self.Estados[i].pop(EPSILON);           # Remove as produções do Épsilon
-                qtdEstados = len(self.Estados);         # Atualiza a quantidade de estados
-            i += 1;
-
-        self.Alfabeto.remove(EPSILON);
-
-
     def removerInalcancaveis(self):
         estados = self.gerarEstadosParaMinimizacao();
         self.visitaNovaProducaoInalcancavel(estados, 0);

@@ -10,6 +10,10 @@ class Determinizacao(Automato):
         self.Finais = automato.Finais
         self.NovasProducoes = automato.NovasProducoes
         self.TransicoesVisitadas = automato.TransicoesVisitadas
+        
+
+    def imprimir(self):
+        return super().imprimir('\n\n######################## DETERMINIZADO: ########################\n')
 
 
     def determinizar(self):
