@@ -268,11 +268,15 @@ class Automato(object):
 
 
     def adicionaAutomatoMinimizado(self,transicao,producaoAtual,producaoInserir):
-        if transicao not in self.AutomatoMinimizado:
-            self.AutomatoMinimizado.update({transicao : {producaoAtual: [producaoInserir]}});
+        if producaoAtual == -1:
+            if transicao not in self.AutomatoMinimizado:
+                self.AutomatoMinimizado.update({transicao : {}});
         else:
-            if producaoAtual not in self.AutomatoMinimizado[transicao]:
-                self.AutomatoMinimizado[transicao].update({producaoAtual: [producaoInserir]});        
+            if transicao not in self.AutomatoMinimizado:
+                self.AutomatoMinimizado.update({transicao : {producaoAtual: [producaoInserir]}});
+            else:
+                if producaoAtual not in self.AutomatoMinimizado[transicao]:
+                    self.AutomatoMinimizado[transicao].update({producaoAtual: [producaoInserir]});
 
 
     #atualmente esta lista temp não esta clonando, as referencias com o original permanecem, precisa criar nova estrutura;
@@ -283,14 +287,16 @@ class Automato(object):
         for transicao in AutomatoValido:
             for producao in list(AutomatoValido[transicao]):
                 if len(AutomatoValido[transicao][producao]) > 0:
-                    if transicao not in estadosTemp: #--
+                    if transicao not in estadosTemp: 
                         estadosTemp.update({transicao : {producao: Producao(AutomatoValido[transicao][producao][0])}});
                     else:
                         if producao not in estadosTemp[transicao]:
                             estadosTemp[transicao].update({producao: Producao(AutomatoValido[transicao][producao][0])});
-                else:
+                else:                    
                     if ((transicao in estadosTemp) and (producao not in estadosTemp[transicao])):
-                            estadosTemp[transicao].update({producao: Producao(-1)});
+                        estadosTemp[transicao].update({producao: Producao(-1)});
+                    elif transicao in self.Finais:
+                        estadosTemp.update({transicao : {producao: Producao(-1)}});
 
         return estadosTemp;
 
@@ -317,9 +323,12 @@ class Automato(object):
         #self.TransicoesVisitadas = list(set([transicao] + self.TransicoesVisitadas));
         if transicao in estados:     
             for producao in estados[transicao]:            
+                if transicao in self.Finais:
+                    self.adicionaAutomatoMinimizado(transicao,-1,-1);
+                    return True;
 
                 if estados[transicao][producao].chegouEstadoTerminal or (transicao in self.Finais):
-                    return True;            
+                    return True;
             
                 if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
                     return False;
