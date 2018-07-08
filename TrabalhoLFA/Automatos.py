@@ -25,11 +25,6 @@ class Automato(object):
         self.AutomatoMinimizado = dict();
 
 
-    def leitura(self, arquivo):
-        arquivo = open(arquivo, 'r');   # Abre o arquivo de entrada
-        self.Texto = arquivo.read();    # Converte o arquivo para string
-
-
     # -- Inserção de Tokens da Linguagem
     def carregaToken(self, simbolo, new):
         self.Alfabeto.add(simbolo);                                                     # Adiciona o símbolo ao conjunto alfabeto
@@ -160,12 +155,15 @@ class Automato(object):
 
 
     # -- Insere no automato:
-    def carrega(self):
+    def carrega(self, arquivo):
+        arquivo = open(arquivo, 'r');   # Abre o arquivo de entrada
+        entrada = arquivo.read();    # Converte o arquivo para string
+
         new = True;                                     # Marca flag de novo estado
 
         self.Estados.update({len(self.Estados): {}});   # Inicializa o estado inicial com: um inteiro para chave e um dicionário vazio para conteúdo
 
-        for simbolo in self.Texto:                      # Faz um loop, caractere e caractere na string da estrada
+        for simbolo in entrada:                      # Faz um loop, caractere e caractere na string da estrada
             simbolo = simbolo.lower();                  # Utiliza todas as letras em minusculo
 
             if simbolo == '\n':                         # Identifica quebra de linha
@@ -178,7 +176,7 @@ class Automato(object):
                 self.carregaToken(simbolo, new);        # Carrega o token para o autômato.
                 new = False;                            # Reseta a variável para o próximo símbolo
 
-        texto = self.Texto.partition('\n\n')[2];        # Separa o texto após as duas quebras de linha para a leitura de gramática
+        texto = entrada.partition('\n\n')[2];        # Separa o texto após as duas quebras de linha para a leitura de gramática
         self.carregaGramatica(texto.splitlines());      # Envia o texto em formato de lista com as linhas do texto
         self.setAlfabeto();                             # Relaciona os estados com o alfabeto da linguagem
 
