@@ -1,10 +1,11 @@
 import re
-from Producao import Producao;
-
-FINAL = '$'
-EPSILON = '#'
+from Producao import Producao
 
 class Automato(object):
+
+    # -- Declaração das constantes da classe
+    FINAL = '$'
+    EPSILON = '#'
 
     # -- Declaração dos campos da classe
     Estados = dict();   # Estrutura que guarda todos os estados do autômato
@@ -100,10 +101,10 @@ class Automato(object):
 
                 elif (re.match('/<\S>', word) is not None or                    
                       re.match('=<\S>', word) is not None):                     # Se a palavra tem o formato de um nome de regra:
-                    novaTransicao(self, EPSILON, word[2]);                        # Adiciona uma nova transição à regra ativa
+                    novaTransicao(self, self.EPSILON, word[2]);                        # Adiciona uma nova transição à regra ativa
                     word = '';                                                  # Reinicia a palavra
 
-                elif ((word == '/' + FINAL) or (word == '=' + FINAL)):                                             # Se foi encontrado um caractere que indica estado final:
+                elif ((word == '/' + self.FINAL) or (word == '=' + self.FINAL)):                                             # Se foi encontrado um caractere que indica estado final:
                     self.Finais.add(regraAtiva);                                # Marca a regra ativa como final.
 
             self.insereEstadosGramatica(estados);                               # Insere os estados criados localmente nos estados do automato
