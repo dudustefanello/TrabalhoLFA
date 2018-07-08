@@ -143,41 +143,6 @@ class Automato(object):
 
             print('');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
 
-    # -- Imprime o automato finito deterministico
-    def imprimirMinimizado(self):
-        for nome, estado in self.AutomatoMinimizado.items():                   # Faz um loop nos estados
-            print(' *' if nome in self.Finais else '  ', end='');   # Marca os estados que são finais
-            print(nome, end=' = ');                                 # Imprime o nome/numero do estado
-
-            for simbolo, transicoes in estado.items():              # Faz um loop em cada estado
-                
-                if len(transicoes) > 0:                             # Se existir transições para um símbolo
-                    print(simbolo, transicoes, end=', ');           # Imprime o símbolo e a lista de transições
-
-            print('');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
-
-    def imprimirMinimizado2(self):
-        for nome, estado in self.Estados.items():                   # Faz um loop nos estados
-            print(' *' if nome in self.Finais else '  ', end='');   # Marca os estados que são finais
-            print(nome, end=' = ');                                 # Imprime o nome/numero do estado
-
-            inalcancavel = False;
-            for simbolo, transicoes in estado.items():              # Faz um loop em cada estado                
-                #if len(transicoes) > 0:                             # Se existir transições para um símbolo
-                
-                if not transicoes.temProducao():
-                    continue;
-
-                if not transicoes.visitado:
-                    inalcancavel = True;              
-                
-                print(simbolo, [transicoes.producao], end=', ');           # Imprime o símbolo e a lista de transições
-            
-            if inalcancavel:
-                print('+', end='');
-
-            print('');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
-
 
     # -- Insere todos os símbolos do alfabeto em um estado
     def setAlfabetoEstado(self, estado):
@@ -267,6 +232,7 @@ class Automato(object):
         for producao in producoes:
             if producao in self.Finais:
                 self.Finais.add(novaProducao);
+
 
     def pegarProducaoOriginal(self, producaoOrig):
         retorno = list(set(producaoOrig));
@@ -487,4 +453,3 @@ class Automato(object):
 
         return False;
 
-            #return chegouEstatoTerminal;

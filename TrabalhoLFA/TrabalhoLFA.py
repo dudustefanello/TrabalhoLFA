@@ -13,6 +13,7 @@ automato.imprimir('\n\n######################## DETERMINIZADO: #################
 
 automato.removerInalcancaveis();
 automato.imprimir('\n\n###################### SEM INALCANÇAVEIS: ######################\n'); # Imprimir automato final
+
 automato.removerMortos();
 automato.imprimir('\n\n########################## SEM MORTOS: #########################\n'); # Imprimir automato final
 
