@@ -205,6 +205,9 @@ class Automato(object):
 
     def visitaNovaProducaoInalcancavel(self, estados, transicao):
          if transicao in estados:
+             if transicao in self.Finais:
+                 self.adicionaAutomatoMinimizado(transicao,-1,-1);
+
              for producao in estados[transicao]:
             
                 if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
