@@ -151,7 +151,8 @@ class Automato(object):
 
     # -- Relacioana os estados com os símbolos do alfabeto
     def setAlfabeto(self):
-        for nome, estado in self.Estados.items():   # Faz um loop nos estados
+        estados = self.pegarAutomato();
+        for nome, estado in estados.items():        # Faz um loop nos estados
             self.setAlfabetoEstado(estado);         # Relacioana o estado com os símbolos do alfabeto
 
 
@@ -239,6 +240,10 @@ class Automato(object):
         AutomatoValido = self.pegarAutomato();
 
         for transicao in AutomatoValido:
+            if (transicao in self.Finais) and (AutomatoValido[transicao] == {}):
+                estadosTemp.update({transicao : {}});
+                continue;
+
             for producao in list(AutomatoValido[transicao]):
                 if len(AutomatoValido[transicao][producao]) > 0:
                     if transicao not in estadosTemp: 
@@ -264,7 +269,6 @@ class Automato(object):
 
     def removerMortos(self):
         estados = self.gerarEstadosParaMinimizacao();
-        self.TransicoesVisitadas = [];
         self.AutomatoMinimizado = dict();
 
         for transicao in estados:
@@ -274,12 +278,12 @@ class Automato(object):
         
 
     def visitaNovaProducaoMortos(self, estados, transicao):
-        #self.TransicoesVisitadas = list(set([transicao] + self.TransicoesVisitadas));
-        if transicao in estados:     
-            for producao in estados[transicao]:            
-                if transicao in self.Finais:
-                    self.adicionaAutomatoMinimizado(transicao,-1,-1);
-                    return True;
+        if transicao in estados:
+            if (transicao in self.Finais) and (estados[transicao] == {}) :
+                self.adicionaAutomatoMinimizado(transicao,-1,-1);
+                return True;
+
+            for producao in estados[transicao]:
 
                 if estados[transicao][producao].chegouEstadoTerminal or (transicao in self.Finais):
                     return True;
