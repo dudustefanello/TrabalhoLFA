@@ -1,9 +1,9 @@
 from Automatos import Automato;
 
-class EspsilonTransicao(Automato):
+class EpsilonTransicao(Automato):
     
     def __init__(self, automato):
-        super(EspsilonTransicao, self).__init__()
+        super(EpsilonTransicao, self).__init__()
 
         self.Estados = automato.Estados
         self.Alfabeto = automato.Alfabeto
