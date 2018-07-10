@@ -13,7 +13,7 @@ class EpsilonTransicao(Automato):
 
 
     def imprimir(self):
-        return super().imprimir('\n\n################## LIVRE DE EPSILON TRANSIÇÕES: ################\n')
+        return super().imprimir('\n\n# LIVRE DE EPSILON TRANSIÇÕES:\n')
 
 
     def eliminarEpsilonTransicoes(self):
