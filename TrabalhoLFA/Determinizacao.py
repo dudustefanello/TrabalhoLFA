@@ -13,7 +13,7 @@ class Determinizacao(Automato):
         
 
     def imprimir(self):
-        return super().imprimir('\n\n######################## DETERMINIZADO: ########################\n')
+        return super().imprimir('\n\n# DETERMINIZADO:\n')
 
 
     def determinizar(self):

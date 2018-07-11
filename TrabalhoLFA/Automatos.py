@@ -126,8 +126,12 @@ class Automato(object):
                     self.Estados[nome].update({simbolo: transicoes});               # Adiciona as novas transições no estado.
 
 
+    def imprimir(self, mensagem, First = False):
+        self.imprimirTela(mensagem);
+        self.imprimirArquivo(mensagem, First);
+
     # -- Imprime o automato finito deterministico
-    def imprimir(self, mensagem = ''):
+    def imprimirTela(self, mensagem = ''):
         print(mensagem)
         estados = self.pegarAutomato();
         for nome, estado in sorted(estados.items()):                   # Faz um loop nos estados
@@ -140,6 +144,27 @@ class Automato(object):
                     print(simbolo, transicoes, end=', ');           # Imprime o símbolo e a lista de transições
 
             print('');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
+
+
+    # -- Imprime o automato finito deterministico
+    def imprimirArquivo(self, mensagem = '', First = False):
+        if First:
+            arquivo = open('automato.txt', 'w')
+        else:
+            arquivo = open('automato.txt', 'a')
+        estados = self.pegarAutomato();
+
+        arquivo.write(mensagem)
+        for nome, estado in sorted(estados.items()):                   # Faz um loop nos estados
+            arquivo.write(' *' if nome in self.Finais else '  ');   # Marca os estados que são finais
+            arquivo.write(str(nome) + ' = ');                                 # Imprime o nome/numero do estado
+
+            for simbolo, transicoes in estado.items():              # Faz um loop em cada estado
+                
+                if len(transicoes) > 0:                             # Se existir transições para um símbolo
+                    arquivo.write(simbolo + str(transicoes) + ', ');           # Imprime o símbolo e a lista de transições
+
+            arquivo.write('\n');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
 
 
     # -- Insere todos os símbolos do alfabeto em um estado

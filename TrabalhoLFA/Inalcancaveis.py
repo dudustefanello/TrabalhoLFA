@@ -6,6 +6,10 @@ class Inalcancaveis(Inuteis):
     def __init__(self, automato):
         super(Inalcancaveis, self).__init__(automato)
 
+
+    def imprimir(self):
+        return super().imprimir('\n\n# SEM INALCANCAVEIS:\n')
+
           
     def removerInalcancaveis(self):
         estados = self.gerarEstadosParaMinimizacao();

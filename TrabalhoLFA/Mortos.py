@@ -4,6 +4,9 @@ class Mortos(Inuteis):
     
     def __init__(self, automato):
         super(Mortos, self).__init__(automato)
+    
+    def imprimir(self):
+        return super().imprimir('\n\n# SEM MORTOS:\n')
 
     def removerMortos(self):
         estados = self.gerarEstadosParaMinimizacao();
