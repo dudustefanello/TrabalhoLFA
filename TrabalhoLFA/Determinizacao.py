@@ -78,7 +78,7 @@ class Determinizacao(Automato):
 
                         if (len(lista) > 1) and (not self.existeProducaoAgrupada(lista)):                       # Se a largura dessa lista for maior que 1 e não existe produção agrupada pra ela
                             novoEstado = self.pegarNovoEstadoDetrminizacao()                                    # Enumera um novo estado
-                            self.NovosEstados.update({self.geraProducaoAgrupada(lista): [novoEstado,lista]})    # Adicina aos novos estados
+                            self.NovosEstados.update({self.geraProducaoAgrupada(lista): [novoEstado,lista]})    # Adiciona aos novos estados
 
                     else:                                                                                       # Se o o símbolo j não estiver no estado temporário:
                         producaoAtual = list(set(self.Estados[i][j]))                                           # Concatena as transições de j
@@ -95,8 +95,8 @@ class Determinizacao(Automato):
                         else:                                                                                   # Senão
                             estadoTemporario.update({j: producaoAtual})                                         # Adiciona uma nova transição ao estado temporário
 
-            self.setAlfabetoEstado(estadoTemporario)                                                            # Relaciona o estado temporário com os símbolos do alfabeto
-            self.Estados.update({self.NovosEstados[producaoAgrupada][0]: estadoTemporario})                     # Adiciona o estado temporário ao dicionário de estados da classe
+            self.setAlfabetoEstado(estadoTemporario);                                                           # Relaciona o estado temporário com os símbolos do alfabeto
+            self.Estados.update({self.NovosEstados[producaoAgrupada][0]: estadoTemporario});                    # Adiciona o estado temporário ao dicionário de estados da classe
             self.adicionaEstadoFinal(producoes, self.NovosEstados[producaoAgrupada][0])                         # Verifica se deve adicionar aos estados finais
             self.substituiNovaProducao()                                                                        # Verifica as produção criadas
 
