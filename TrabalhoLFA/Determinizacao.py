@@ -73,7 +73,7 @@ class Determinizacao(Automato):
             for i in producoes:                                                                                 # Faz um loop nas produções que que contém a indeterminação
                 for j in sorted(self.Alfabeto):                                                                 # Fazendo loop no conjunto de símbolos do alfabeto
                     if j in estadoTemporario:                                                                   # Se o o símbolo j já estiver no estado temporário:
-                        lista = list(set(estadoTemporario[j] + self."(self.Estados[i][j]))) # Adiciona a lista de transições de j
+                        lista = list(set(estadoTemporario[j] + self.pegarProducaoOriginal(self.Estados[i][j]))) # Adiciona a lista de transições de j
                         estadoTemporario[j] = lista                                                             # ao estado criado
 
                         if (len(lista) > 1) and (not self.existeProducaoAgrupada(lista)):                       # Se a largura dessa lista for maior que 1 e não existe produção agrupada pra ela
