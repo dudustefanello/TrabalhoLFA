@@ -1,4 +1,4 @@
-from Automatos import Automato
+from Automatos import Automato;
 
 class Determinizacao(Automato):
     
