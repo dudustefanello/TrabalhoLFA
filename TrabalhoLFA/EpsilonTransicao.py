@@ -8,8 +8,6 @@ class EpsilonTransicao(Automato):
         self.Estados = automato.Estados
         self.Alfabeto = automato.Alfabeto
         self.Finais = automato.Finais
-        self.NovasProducoes = automato.NovasProducoes
-        self.TransicoesVisitadas = automato.TransicoesVisitadas
 
 
     def imprimir(self):
