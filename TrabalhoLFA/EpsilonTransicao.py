@@ -1,4 +1,4 @@
-from Automatos import Automato;
+from Automatos import Automato
 
 class EpsilonTransicao(Automato):
     
@@ -24,19 +24,19 @@ class EpsilonTransicao(Automato):
         if super().EPSILON not in self.Alfabeto:
             return
 
-        producoesComEpsilon = set();
-        qtdEpsilon = len(producoesComEpsilon);
-        qtdEstados = len(self.Estados); 
+        producoesComEpsilon = set()
+        qtdEpsilon = len(producoesComEpsilon)
+        qtdEstados = len(self.Estados) 
         idxEpsilon = self.Alfabeto
-        i = 0;
+        i = 0
 
         while i < qtdEstados:                                                                       # Faz um loop pelos estados
             if i in self.Estados and len(self.Estados[i][super().EPSILON]) > 0:                             # Se houver uma transição com épsion
-                self.removerEpsilonTransicoes(i, self.Estados[i][super().EPSILON][0], producoesComEpsilon);
-                qtdEstados = len(self.Estados);                                                     # Atualiza a quantidade de estados
-            i += 1;
+                self.removerEpsilonTransicoes(i, self.Estados[i][super().EPSILON][0], producoesComEpsilon)
+                qtdEstados = len(self.Estados)                                                     # Atualiza a quantidade de estados
+            i += 1
 
-        self.removerEpsilonTransicoesEstados();
+        self.removerEpsilonTransicoesEstados()
 
 
     def removerEpsilonTransicoes(self, transicaoOriginal, transicaoEpsilon, producoesComEpsilon):
@@ -44,12 +44,12 @@ class EpsilonTransicao(Automato):
 
             for producao in list(self.Estados[transicaoEpsilon]):
                 if producao != self.EPSILON and len(self.Estados[transicaoEpsilon][producao]) > 0:                    
-                    self.Estados[transicaoEpsilon][producao] = (list(set(self.Estados[transicaoEpsilon][producao] + self.Estados[transicaoOriginal][producao])));                    
-                    producoesComEpsilon.update(set(self.Estados[transicaoOriginal][self.EPSILON]));                    
+                    self.Estados[transicaoEpsilon][producao] = (list(set(self.Estados[transicaoEpsilon][producao] + self.Estados[transicaoOriginal][producao])))                    
+                    producoesComEpsilon.update(set(self.Estados[transicaoOriginal][self.EPSILON]))                    
         
         if len(self.Estados[transicaoEpsilon][self.EPSILON]) > 0:            
             if self.Estados[transicaoEpsilon][self.EPSILON][0] not in producoesComEpsilon:
-                self.removerEpsilonTransicoes(transicaoEpsilon, self.Estados[transicaoEpsilon][self.EPSILON][0], producoesComEpsilon);
+                self.removerEpsilonTransicoes(transicaoEpsilon, self.Estados[transicaoEpsilon][self.EPSILON][0], producoesComEpsilon)
 
 
 
@@ -57,16 +57,16 @@ class EpsilonTransicao(Automato):
         if self.EPSILON not in self.Alfabeto:
             return
         
-        qtdEstados = len(self.Estados); 
-        i = 0;
+        qtdEstados = len(self.Estados) 
+        i = 0
         
         while i < qtdEstados:                           # Faz um loop pelos estados
             if i in self.Estados:                       # Se houver uma transição com Épsilon
-                self.Estados[i].pop(self.EPSILON);           # Remove as produções do Épsilon
-                qtdEstados = len(self.Estados);         # Atualiza a quantidade de estados
-            i += 1;
+                self.Estados[i].pop(self.EPSILON)           # Remove as produções do Épsilon
+                qtdEstados = len(self.Estados)         # Atualiza a quantidade de estados
+            i += 1
 
-        self.Alfabeto.remove(self.EPSILON);
+        self.Alfabeto.remove(self.EPSILON)
 
 
 

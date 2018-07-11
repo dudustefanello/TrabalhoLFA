@@ -1,4 +1,4 @@
-from Inuteis import Inuteis;
+from Inuteis import Inuteis
 
 class Mortos(Inuteis):
     
@@ -9,39 +9,39 @@ class Mortos(Inuteis):
         return super().imprimir('\n\n# SEM MORTOS:\n')
 
     def removerMortos(self):
-        estados = self.gerarEstadosParaMinimizacao();
-        self.AutomatoMinimizado = dict();
+        estados = self.gerarEstadosParaMinimizacao()
+        self.AutomatoMinimizado = dict()
 
         for transicao in estados:
             for producao in estados[transicao]:
-                self.visitaNovaProducaoMortos(estados, transicao);
-                estados[transicao][producao].chegouEstadoTerminal = self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
+                self.visitaNovaProducaoMortos(estados, transicao)
+                estados[transicao][producao].chegouEstadoTerminal = self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao)
         
 
     def visitaNovaProducaoMortos(self, estados, transicao):
         if transicao in estados:
             if (transicao in self.Finais) and (estados[transicao] == {}) :
-                self.adicionaAutomatoMinimizado(transicao,-1,-1);
-                return True;
+                self.adicionaAutomatoMinimizado(transicao,-1,-1)
+                return True
 
             for producao in estados[transicao]:
 
                 if estados[transicao][producao].chegouEstadoTerminal or (transicao in self.Finais):
-                    return True;
+                    return True
             
                 if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
-                    return False;
+                    return False
 
                 if estados[transicao][producao].visitado:
-                    continue;
+                    continue
 
         
-            estados[transicao][producao].visitado = True;
+            estados[transicao][producao].visitado = True
                        
             
             if self.visitaNovaProducaoMortos(estados, estados[transicao][producao].producao):
-                estados[transicao][producao].chegouEstadoTerminal = True;
-                self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
-                return True;
+                estados[transicao][producao].chegouEstadoTerminal = True
+                self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao)
+                return True
 
-        return False;
+        return False

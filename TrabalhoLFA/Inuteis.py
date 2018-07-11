@@ -1,4 +1,4 @@
-from Automatos import Automato;
+from Automatos import Automato
 from Producao import Producao
 
 class Inuteis(Automato):
@@ -14,30 +14,30 @@ class Inuteis(Automato):
         self.AutomatoMinimizado = automato.AutomatoMinimizado
 
 
-            #atualmente esta lista temp não esta clonando, as referencias com o original permanecem, precisa criar nova estrutura;
+            #atualmente esta lista temp não esta clonando, as referencias com o original permanecem, precisa criar nova estrutura
     def gerarEstadosParaMinimizacao(self):
-        estadosTemp = dict();
-        AutomatoValido = self.pegarAutomato();
+        estadosTemp = dict()
+        AutomatoValido = self.pegarAutomato()
 
         for transicao in AutomatoValido:
             if (transicao in self.Finais) and (AutomatoValido[transicao] == {}):
-                estadosTemp.update({transicao : {}});
-                continue;
+                estadosTemp.update({transicao: {}})
+                continue
 
             for producao in list(AutomatoValido[transicao]):
                 if len(AutomatoValido[transicao][producao]) > 0:
                     if transicao not in estadosTemp: 
-                        estadosTemp.update({transicao : {producao: Producao(AutomatoValido[transicao][producao][0])}});
+                        estadosTemp.update({transicao: {producao: Producao(AutomatoValido[transicao][producao][0])}})
                     else:
                         if producao not in estadosTemp[transicao]:
-                            estadosTemp[transicao].update({producao: Producao(AutomatoValido[transicao][producao][0])});
+                            estadosTemp[transicao].update({producao: Producao(AutomatoValido[transicao][producao][0])})
                 else:                    
                     if ((transicao in estadosTemp) and (producao not in estadosTemp[transicao])):
-                        estadosTemp[transicao].update({producao: Producao(-1)});
+                        estadosTemp[transicao].update({producao: Producao(-1)})
                     elif transicao in self.Finais:
-                        estadosTemp.update({transicao : {producao: Producao(-1)}});
+                        estadosTemp.update({transicao: {producao: Producao(-1)}})
 
-        return estadosTemp;
+        return estadosTemp
 
 
           
@@ -45,13 +45,13 @@ class Inuteis(Automato):
     def adicionaAutomatoMinimizado(self,transicao,producaoAtual,producaoInserir):
         if producaoAtual == -1:
             if transicao not in self.AutomatoMinimizado:
-                self.AutomatoMinimizado.update({transicao : {}});
+                self.AutomatoMinimizado.update({transicao: {}})
         else:
             if transicao not in self.AutomatoMinimizado:
-                self.AutomatoMinimizado.update({transicao : {producaoAtual: [producaoInserir]}});
+                self.AutomatoMinimizado.update({transicao: {producaoAtual: [producaoInserir]}})
             else:
                 if producaoAtual not in self.AutomatoMinimizado[transicao]:
-                    self.AutomatoMinimizado[transicao].update({producaoAtual: [producaoInserir]});
+                    self.AutomatoMinimizado[transicao].update({producaoAtual: [producaoInserir]})
 
 
 

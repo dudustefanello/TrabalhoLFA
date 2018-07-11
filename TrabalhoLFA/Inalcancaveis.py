@@ -1,4 +1,4 @@
-from Inuteis import Inuteis;
+from Inuteis import Inuteis
 from Producao import Producao
 
 class Inalcancaveis(Inuteis):
@@ -12,23 +12,23 @@ class Inalcancaveis(Inuteis):
 
           
     def removerInalcancaveis(self):
-        estados = self.gerarEstadosParaMinimizacao();
-        self.visitaNovaProducaoInalcancavel(estados, 0);
+        estados = self.gerarEstadosParaMinimizacao()
+        self.visitaNovaProducaoInalcancavel(estados, 0)
 
 
     def visitaNovaProducaoInalcancavel(self, estados, transicao):
          if transicao in estados:
              if transicao in self.Finais:
-                 self.adicionaAutomatoMinimizado(transicao,-1,-1);
+                 self.adicionaAutomatoMinimizado(transicao,-1,-1)
 
              for producao in estados[transicao]:
             
                 if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
-                    continue;
+                    continue
             
                 if estados[transicao][producao].visitado:
-                    return;
+                    return
         
-                estados[transicao][producao].visitado = True;
-                self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
-                self.visitaNovaProducaoInalcancavel(estados, estados[transicao][producao].producao);  
+                estados[transicao][producao].visitado = True
+                self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao)
+                self.visitaNovaProducaoInalcancavel(estados, estados[transicao][producao].producao)  
