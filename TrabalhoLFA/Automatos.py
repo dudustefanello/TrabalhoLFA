@@ -14,7 +14,7 @@ class Automato(object):
     Alfabeto = set()                # Estrutura que contém todos os símbolos do alfabeto
     Finais = set()                  # Estrutura que contém os estados que são finais
     Texto = str()                   # Campo para guardar a string de entrada
-    NovasProducoes = dict()         # Estrutura usada para identificar a origem das novas produções criadas na determinização
+    NovosEstados = dict()         # Estrutura usada para identificar a origem das novas produções criadas na determinização
     TransicoesVisitadas = list()    # Lista para indicar quais transições já foram visitadas na busca em profundidade da remoção de inúteis
     AutomatoMinimizado = dict()     # Estrutura para guardar o automato ao final do processo de minimização
 
@@ -24,7 +24,7 @@ class Automato(object):
         self.Estados = dict()       
         self.Alfabeto = set()       
         self.Finais = set()         
-        self.NovasProducoes = dict()
+        self.NovosEstados = dict()
         self.AutomatoMinimizado = dict()
 
 
