@@ -75,8 +75,21 @@ Na minimização de um autômato devem ser entendidos três conceitos importante
 Um autômato mínimo não tem nenhuma das situações descritas acima. Como não foi necessário eliminar a última situação, nosso autômato gerado não é mínimo de fato, por isso foi chamado que “quase mínimo” no título deste artigo.
 
 ## 9. Remoção de Mortos e Inalcançáveis.
-  xxxxxxxxxxxxxxxxxx
-  xxxxxxxxxxxxxxxxxxxxxx
+O algoritmo implementado para esse trabalho, utiliza o conceito de busca em profundidade, percorrendo o autômato de forma semelhante à como se busca um nodo em um grafo e identificando os estados mortos e inalcançáveis.
+
+Tomando a analogia do autômato como um grafo, cada estado pode ser representao como um vértice, cada um desses vértices pode ter _n_ arestas, que podem ser entendidas como as transições do autômato finito determinístico.
+
+Não seria possível concluir a mesma analogia antes da determinização do autômato, já que por uma transição apenas, um autômato não determinístico pode atingir vários outros estados, situação que não existe em grafos, pois uma aresta liga apenas um vértice a outro.
+
+### 9.1 Remoção de Inalcançáveis
+Na remoção de estados inalcançáveis, a busca em profundidade percorre todos os estados, passando por todas as suas transições de uma e adicionando cada estado visitado em uma nova estrutura, semelhante a estrutura inicial do autômato.
+
+Foi necessária a implementação dessa nova estrutura pois no processo de minimização ocorriam erros ao tentar alterar a estrutura do autômato dentro da recurssão. Ao final do processo o autômato final está em uma estrutura diferente do automato simplesmente determinizado.
+
+### 9.2 Remoção de Mortos
+Na remoção de estados mortos, a busca em profundidade percorre o autômato o quanto for possível, partindo de cada um dos estado alcançáveis.
+
+Se a BFS chegar à um estado onde todas os estados de suas transições já foram visitados, ou chegar à um estado final, o algoritmo mantém o estado no autômato.  
 
 ### Referências
 HOPCROFT, John E.; MOTWANI, Rajeev; ULLMAN, Jeffrey D. (2001). “Introduction to Automata Theory, Languages, and Computation” 2 ed. [S.l.]: Addison Wesley. ISBN 0-201-44124-1. Consultado em 19 de novembro de 2012.
