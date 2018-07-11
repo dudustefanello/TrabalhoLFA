@@ -54,13 +54,8 @@ class Determinizacao(Automato):
 
     # -- Determiniza um estado do automato
     def determinizarProducao(self, producoes):        
-        estadoTemporario = dict()                                                  # Cria um estado temporário
-        #novoEstado = len(self.Estados)                                             # Dá nome/número ao estado que será criado
-        #producoes = transicoes
-        producaoAgrupada = self.geraProducaoAgrupada(producoes) 
-
-        #if producaoAgrupada in self.NovasProducoes:
-        #    self.Estados[transicao][producao] = [self.NovasProducoes[producaoAgrupada][0]]
+        estadoTemporario = dict()
+        producaoAgrupada = self.geraProducaoAgrupada(producoes)
 
         if ((producaoAgrupada not in self.NovasProducoes) or (self.NovasProducoes[producaoAgrupada][0] not in self.Estados)):            
             if (len(producoes) > 1) and (not self.existeProducaoAgrupada(producoes)):
