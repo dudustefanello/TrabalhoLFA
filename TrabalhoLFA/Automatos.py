@@ -79,8 +79,7 @@ class Automato(object):
 
         for linha in textos:                                                    # Faz um loop nas linhas do texto de entrada
             
-            linha = linha.replace('|', '/')
-            word = ''                                                          # Zera a palavra
+            word = ''                                                           # Zera a palavra
 
             for caractere in linha:                                             # Faz um loop nos caracteres da linha
                 if caractere in ignorar:                                        # Se o caractere estiver na lista de ignorados:
@@ -94,17 +93,17 @@ class Automato(object):
                     regraAtiva = regras[word[1]]                               # Marca a flag de regra ativa para adicionar uma transição nessa regra
                     word = ''                                                  # Reinicia a palavra
 
-                elif (re.match('/\S<\S>', word) is not None or
+                elif (re.match('\|\S<\S>', word) is not None or
                       re.match('=\S<\S>', word) is not None):                   # Se a palavra tem o formato de uma transição:
                     novaTransicao(self, word[1], word[3])                      # Adiciona uma nova transição à regra ativa
                     word = ''                                                  # Reinicia a palavra
 
-                elif (re.match('/<\S>', word) is not None or                    
+                elif (re.match('\|<\S>', word) is not None or                    
                       re.match('=<\S>', word) is not None):                     # Se a palavra tem o formato de um nome de regra:
                     novaTransicao(self, self.EPSILON, word[2])                        # Adiciona uma nova transição à regra ativa
                     word = ''                                                  # Reinicia a palavra
 
-                elif ((word == '/' + self.FINAL) or (word == '=' + self.FINAL)):                                             # Se foi encontrado um caractere que indica estado final:
+                elif ((word == '|' + self.FINAL) or (word == '=' + self.FINAL)):                                             # Se foi encontrado um caractere que indica estado final:
                     self.Finais.add(regraAtiva)                                # Marca a regra ativa como final.
 
             self.insereEstadosGramatica(estados)                               # Insere os estados criados localmente nos estados do automato
