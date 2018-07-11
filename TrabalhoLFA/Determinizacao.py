@@ -19,6 +19,21 @@ class Determinizacao(Automato):
     def determinizar(self):
         self.buscarIndeterminismo()  
         
+    def adicionaEstadoFinal(self, producoes, novaProducao):
+        for producao in producoes:
+            if producao in self.Finais:
+                self.Finais.add(novaProducao);
+
+                
+    def substituiNovaProducao(self):
+        if len(self.NovasProducoes) > 0:            
+            for transicoes in self.Estados:
+                for letra in sorted(self.Alfabeto): 
+                    if len(self.Estados[transicoes][letra]) > 1:
+                        producaoAgrupadaTemp = self.geraProducaoAgrupada(self.Estados[transicoes][letra]);
+                        if producaoAgrupadaTemp in self.NovasProducoes:
+                            self.Estados[transicoes][letra] = [self.NovasProducoes[producaoAgrupadaTemp][0]];
+
 
     # -- Percorre o autômato identificando e tratando seus indeterminismos
     def buscarIndeterminismo(self):

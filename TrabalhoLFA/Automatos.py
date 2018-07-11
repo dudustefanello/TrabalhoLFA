@@ -183,82 +183,6 @@ class Automato(object):
         self.setAlfabeto();                             # Relaciona os estados com o alfabeto da linguagem
 
 
-    def adicionaEstadoFinal(self, producoes, novaProducao):
-        for producao in producoes:
-            if producao in self.Finais:
-                self.Finais.add(novaProducao);
-
-
-    def substituiNovaProducao(self):
-        if len(self.NovasProducoes) > 0:            
-            for transicoes in self.Estados:
-                for letra in sorted(self.Alfabeto): 
-                    if len(self.Estados[transicoes][letra]) > 1:
-                        producaoAgrupadaTemp = self.geraProducaoAgrupada(self.Estados[transicoes][letra]);
-                        if producaoAgrupadaTemp in self.NovasProducoes:
-                            self.Estados[transicoes][letra] = [self.NovasProducoes[producaoAgrupadaTemp][0]];
-
-
-    def removerInalcancaveis(self):
-        estados = self.gerarEstadosParaMinimizacao();
-        self.visitaNovaProducaoInalcancavel(estados, 0);
-
-
-    def visitaNovaProducaoInalcancavel(self, estados, transicao):
-         if transicao in estados:
-             if transicao in self.Finais:
-                 self.adicionaAutomatoMinimizado(transicao,-1,-1);
-
-             for producao in estados[transicao]:
-            
-                if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
-                    continue;
-            
-                if estados[transicao][producao].visitado:
-                    return;
-        
-                estados[transicao][producao].visitado = True;
-                self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
-                self.visitaNovaProducaoInalcancavel(estados, estados[transicao][producao].producao);            
-
-
-    def adicionaAutomatoMinimizado(self,transicao,producaoAtual,producaoInserir):
-        if producaoAtual == -1:
-            if transicao not in self.AutomatoMinimizado:
-                self.AutomatoMinimizado.update({transicao : {}});
-        else:
-            if transicao not in self.AutomatoMinimizado:
-                self.AutomatoMinimizado.update({transicao : {producaoAtual: [producaoInserir]}});
-            else:
-                if producaoAtual not in self.AutomatoMinimizado[transicao]:
-                    self.AutomatoMinimizado[transicao].update({producaoAtual: [producaoInserir]});
-
-
-    #atualmente esta lista temp não esta clonando, as referencias com o original permanecem, precisa criar nova estrutura;
-    def gerarEstadosParaMinimizacao(self):
-        estadosTemp = dict();
-        AutomatoValido = self.pegarAutomato();
-
-        for transicao in AutomatoValido:
-            if (transicao in self.Finais) and (AutomatoValido[transicao] == {}):
-                estadosTemp.update({transicao : {}});
-                continue;
-
-            for producao in list(AutomatoValido[transicao]):
-                if len(AutomatoValido[transicao][producao]) > 0:
-                    if transicao not in estadosTemp: 
-                        estadosTemp.update({transicao : {producao: Producao(AutomatoValido[transicao][producao][0])}});
-                    else:
-                        if producao not in estadosTemp[transicao]:
-                            estadosTemp[transicao].update({producao: Producao(AutomatoValido[transicao][producao][0])});
-                else:                    
-                    if ((transicao in estadosTemp) and (producao not in estadosTemp[transicao])):
-                        estadosTemp[transicao].update({producao: Producao(-1)});
-                    elif transicao in self.Finais:
-                        estadosTemp.update({transicao : {producao: Producao(-1)}});
-
-        return estadosTemp;
-
 
     def pegarAutomato(self):
         if len(self.AutomatoMinimizado) > 0:
@@ -267,41 +191,21 @@ class Automato(object):
             return self.Estados;
 
 
-    def removerMortos(self):
-        estados = self.gerarEstadosParaMinimizacao();
-        self.AutomatoMinimizado = dict();
 
-        for transicao in estados:
-            for producao in estados[transicao]:
-                self.visitaNovaProducaoMortos(estados, transicao);
-                estados[transicao][producao].chegouEstadoTerminal = self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
-        
 
-    def visitaNovaProducaoMortos(self, estados, transicao):
-        if transicao in estados:
-            if (transicao in self.Finais) and (estados[transicao] == {}) :
-                self.adicionaAutomatoMinimizado(transicao,-1,-1);
-                return True;
 
-            for producao in estados[transicao]:
 
-                if estados[transicao][producao].chegouEstadoTerminal or (transicao in self.Finais):
-                    return True;
-            
-                if not estados[transicao][producao].temProducao():        #caso não tenha uma produção válida
-                    return False;
 
-                if estados[transicao][producao].visitado:
-                    continue;
 
-        
-            estados[transicao][producao].visitado = True;
-                       
-            
-            if self.visitaNovaProducaoMortos(estados, estados[transicao][producao].producao):
-                estados[transicao][producao].chegouEstadoTerminal = True;
-                self.adicionaAutomatoMinimizado(transicao,producao,estados[transicao][producao].producao);
-                return True;
 
-        return False;
 
+
+
+
+
+
+
+
+
+
+  
