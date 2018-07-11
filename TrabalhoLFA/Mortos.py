@@ -5,12 +5,6 @@ class Mortos(Inuteis):
     def __init__(self, automato):
         super(Mortos, self).__init__(automato)
 
-        self.Estados = automato.Estados
-        self.Alfabeto = automato.Alfabeto
-        self.Finais = automato.Finais
-        self.NovasProducoes = automato.NovasProducoes
-        self.TransicoesVisitadas = automato.TransicoesVisitadas
-
     def removerMortos(self):
         estados = self.gerarEstadosParaMinimizacao();
         self.AutomatoMinimizado = dict();
