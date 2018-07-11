@@ -1,12 +1,11 @@
-from Producao import Producao
 import re
+from Producao import Producao
 
 class Automato(object):
 
     # -- Declaração das constantes da classe
     FINAL = '$'
     EPSILON = '#'
-
 
     # -- Declaração dos campos da classe
     Estados = dict();   # Estrutura que guarda todos os estados do autômato
@@ -127,8 +126,8 @@ class Automato(object):
                     self.Estados[nome].update({simbolo: transicoes});               # Adiciona as novas transições no estado.
 
 
-    # -- Imprime o automato em tela
-    def imprimeTela(self, mensagem = ''):
+    # -- Imprime o automato finito deterministico
+    def imprimir(self, mensagem = ''):
         print(mensagem)
         estados = self.pegarAutomato();
         for nome, estado in sorted(estados.items()):                   # Faz um loop nos estados
@@ -141,29 +140,6 @@ class Automato(object):
                     print(simbolo, transicoes, end=', ');           # Imprime o símbolo e a lista de transições
 
             print('');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
-
-
-    # -- Imprime o automato no arquivo automato.txt
-    def imprimeArquivo(self, mensagem = ''):
-        arquivo = open('automato.txt', 'w+')
-        arquivo.write(mensagem + '\n')
-        estados = self.pegarAutomato();
-        for nome, estado in sorted(estados.items()):                   # Faz um loop nos estados
-            arquivo.write(' *' if nome in self.Finais else '  ');   # Marca os estados que são finais
-            arquivo.write(str(nome) + ' = ');                                 # Imprime o nome/numero do estado
-
-            for simbolo, transicoes in estado.items():              # Faz um loop em cada estado
-                
-                if len(transicoes) > 0:                             # Se existir transições para um símbolo
-                    arquivo.write(simbolo + str(transicoes) + ', ');           # Imprime o símbolo e a lista de transições
-
-            arquivo.write('\n');                                              # Insere uma quebra de linha ao final de cada impressão de símbolo
-
-    # -- Imprime o automato finito deterministico
-    def imprimir(self, mensagem = ''):
-        self.imprimeTela(mensagem)
-        self.imprimeArquivo(mensagem)
-
 
 
     # -- Insere todos os símbolos do alfabeto em um estado
@@ -207,14 +183,12 @@ class Automato(object):
         self.setAlfabeto();                             # Relaciona os estados com o alfabeto da linguagem
 
 
-    # -- 
     def adicionaEstadoFinal(self, producoes, novaProducao):
         for producao in producoes:
             if producao in self.Finais:
                 self.Finais.add(novaProducao);
 
 
-    # -- 
     def substituiNovaProducao(self):
         if len(self.NovasProducoes) > 0:            
             for transicoes in self.Estados:
@@ -225,7 +199,6 @@ class Automato(object):
                             self.Estados[transicoes][letra] = [self.NovasProducoes[producaoAgrupadaTemp][0]];
 
 
-    # -- 
     def pegarAutomato(self):
         if len(self.AutomatoMinimizado) > 0:
             return self.AutomatoMinimizado;
